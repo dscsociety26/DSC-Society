@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Index from "./pages/Index";
 import About from "./pages/About";
+import TeamProfile from "./pages/TeamProfile";
 import FocusAreas from "./pages/FocusAreas";
 import Gallery from "./pages/Gallery";
 import JoinUs from "./pages/JoinUs";
@@ -26,6 +27,10 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
+            <Route
+  path="/team/:id"
+  element={<TeamProfile />}
+/>
             <Route path="/focus-areas" element={<FocusAreas />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/join-us" element={<JoinUs />} />
