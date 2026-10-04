@@ -10,6 +10,8 @@ import manyamtharunkumarPhoto from "@/assets/team/manyam-tharun-kumar.jpeg";
 import majjimadhavigayathriPhoto from "@/assets/team/majji-madhavi-gayathri.jpeg";
 import majjidivyaPhoto from "@/assets/team/majji-divya.jpeg";
 import sravanisankarapuPhoto from "@/assets/team/sravani-sankarapu.jpeg";
+import budisatyanarayanaPhoto from "@/assets/team/budi-satyanarayana.jpeg";
+import guntakakushankarareddyPhoto from "@/assets/team/guntaka-kushankara-reddy.jpeg";
 
 
 export interface TeamMember {
@@ -186,6 +188,7 @@ export const team: TeamMember[] = [
     id: "budi-satyanarayana",
     name: "Budi Satyanarayana",
     role: "Member",
+    photo: budisatyanarayanaPhoto,
     origin: "Bobbili, Vizianagaram District, Andhra Pradesh",
     shortBio:
       "Young Entrepreneur | Environmental Enthusiast",
@@ -203,6 +206,7 @@ export const team: TeamMember[] = [
     id: "guntaka-kushankara-reddy",
     name: "Guntaka Kushankara Reddy",
     role: "Member",
+    photo: guntakakushankarareddyPhoto,
     origin: "Andhra Pradesh",
     shortBio:
       "Telugu Pandit | Environmental Enthusiast",
