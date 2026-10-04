@@ -1,4 +1,3 @@
-```tsx
 import { Link, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -188,4 +187,3 @@ const TeamProfile = () => {
 };
 
 export default TeamProfile;
-```
