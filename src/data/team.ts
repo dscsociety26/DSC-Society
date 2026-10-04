@@ -8,8 +8,6 @@ export interface TeamMember {
   name: string;
   role: string;
   photo?: string;
-  qualification: string;
-  currentWork: string;
   origin?: string;
   shortBio: string;
   biography: string;
@@ -22,8 +20,6 @@ export const team: TeamMember[] = [
     name: "D. Sai Charan Gupta",
     role: "Founder & President",
     photo: saiPhoto,
-    qualification: "Research Scholar",
-    currentWork: "Social Work Professional | Research Scholar | Community Development Advocate",
     origin: "Guntur,Andhra Pradesh",
     shortBio:
       "Founder of DSC Society, committed to environmental protection and community development.",
@@ -41,8 +37,6 @@ export const team: TeamMember[] = [
     id: "ramakanth",
     name: "RamaKanth",
     role: "Member",
-    qualification: "Add educational qualification",
-    currentWork: "Add current professional position",
     shortBio:
       "Committed to environmental awareness and community participation.",
     biography:
@@ -57,8 +51,6 @@ export const team: TeamMember[] = [
     name: "Pudi Tanoj",
     role: "Member",
     photo: tanojPhoto,
-    qualification: "Research Scholar",
-    currentWork: "Scholar",
     origin: "Anakapalle, Visakhapatnam",
     shortBio:
       "Research Scholar | Historian | Environmental Advocate | Youth & Community Activist",
@@ -76,8 +68,6 @@ export const team: TeamMember[] = [
     name: "Mundlapati Venkatesh",
     role: "Member",
     photo: mundlapativenkateshPhoto,
-    qualification: "B-Tech,LLB",
-    currentWork: "Advocate",
     origin: "Piduguralla, Guntur District, Andhra Pradesh",
     shortBio:
       "Engineer | Advocate | Farmer | Social Worker ",
@@ -96,8 +86,6 @@ export const team: TeamMember[] = [
     name: "Mundlapati Venkatesh",
     role: "Member",
     photo: mundlapativenkateshPhoto,
-    qualification: "B-Tech,LLB",
-    currentWork: "Advocate",
     origin: "Piduguralla, Guntur District, Andhra Pradesh",
     shortBio:
       "Engineer | Advocate | Farmer | Social Worker ",
