@@ -1,7 +1,7 @@
+```tsx
 import saiPhoto from "@/assets/team/sai-charan-gupta.jpeg";
 import tanojPhoto from "@/assets/team/pudi-tanoj.jpeg";
-import mundlapativenkateshPhoto from "@/assets/team/mundlapati-venkatesh.jpeg";
-
+import mundlapatiVenkateshPhoto from "@/assets/team/mundlapati-venkatesh.jpeg";
 
 export interface TeamMember {
   id: string;
@@ -20,11 +20,11 @@ export const team: TeamMember[] = [
     name: "D. Sai Charan Gupta",
     role: "Founder & President",
     photo: saiPhoto,
-    origin: "Guntur,Andhra Pradesh",
+    origin: "Guntur, Andhra Pradesh",
     shortBio:
       "Founder of DSC Society, committed to environmental protection and community development.",
     biography:
-      "D. Sai Charan Gupta is the Founding Member of Dharitree Samrakshana Chaitanyam Society and a Research Scholar at Acharya Nagarjuna University. Having completed his Master’s degrees in Social Work and Sociology, he possesses a strong understanding of social issues, community development, and grassroots engagement. His professional and social involvement includes working in tribal regions, particularly through initiatives associated with ITDA Paderu, where he gained valuable exposure to the challenges, livelihoods, and socio-economic realities of tribal communities. Having previously served as the ABVP State Joint Secretary, Andhra Pradesh, he brings extensive experience in student leadership, organizational activities, and social engagement. Driven by a deep commitment to environmental conservation and community welfare, he established DSC Society with a vision to promote environmental awareness, sustainable living.",
+      "D. Sai Charan Gupta is the Founding Member of Dharitree Samrakshana Chaitanyam Society and a Research Scholar at Acharya Nagarjuna University. Having completed his Master’s degrees in Social Work and Sociology, he possesses a strong understanding of social issues, community development, and grassroots engagement. His professional and social involvement includes working in tribal regions, particularly through initiatives associated with ITDA Paderu, where he gained valuable exposure to the challenges, livelihoods, and socio-economic realities of tribal communities. Having previously served as the ABVP State Joint Secretary, Andhra Pradesh, he brings extensive experience in student leadership, organizational activities, and social engagement. Driven by a deep commitment to environmental conservation and community welfare, he established DSC Society with a vision to promote environmental awareness and sustainable living.",
     interests: [
       "Environmental Protection",
       "Youth Leadership",
@@ -32,7 +32,7 @@ export const team: TeamMember[] = [
       "Sustainability",
     ],
   },
- 
+
   {
     id: "ramakanth",
     name: "RamaKanth",
@@ -46,7 +46,8 @@ export const team: TeamMember[] = [
       "Community Service",
     ],
   },
-   {
+
+  {
     id: "pudi-tanoj",
     name: "Pudi Tanoj",
     role: "Member",
@@ -63,14 +64,15 @@ export const team: TeamMember[] = [
       "Public Administration",
     ],
   },
+
   {
     id: "mundlapati-venkatesh",
     name: "Mundlapati Venkatesh",
     role: "Member",
-    photo: mundlapativenkateshPhoto,
+    photo: mundlapatiVenkateshPhoto,
     origin: "Piduguralla, Guntur District, Andhra Pradesh",
     shortBio:
-      "Engineer | Advocate | Farmer | Social Worker ",
+      "Engineer | Advocate | Farmer | Social Worker",
     biography:
       "Mundlapati Venkatesh hails from Piduguralla, Guntur District, Andhra Pradesh, and holds a B.Tech in Electrical and Electronics Engineering from JNTU Kakinada and an LL.B. from Adikavi Nannaya University. He currently practices as an Advocate at the Guntur Bar, with a strong commitment to justice and public service. Apart from his legal profession, he is actively involved in farming, social work, and content writing, reflecting his interest in agriculture, rural development, and community welfare. Through Dharitree Samrakshana Chaitanyam Society, he aspires to contribute to legal awareness, social empowerment, sustainable development, and community welfare, while encouraging individuals to participate in positive social change.",
     interests: [
@@ -81,23 +83,6 @@ export const team: TeamMember[] = [
     ],
   },
 
-  {
-    id: "mundlapati-venkatesh",
-    name: "Mundlapati Venkatesh",
-    role: "Member",
-    photo: mundlapativenkateshPhoto,
-    origin: "Piduguralla, Guntur District, Andhra Pradesh",
-    shortBio:
-      "Engineer | Advocate | Farmer | Social Worker ",
-    biography:
-      "Mundlapati Venkatesh hails from Piduguralla, Guntur District, Andhra Pradesh, and holds a B.Tech in Electrical and Electronics Engineering from JNTU Kakinada and an LL.B. from Adikavi Nannaya University. He currently practices as an Advocate at the Guntur Bar, with a strong commitment to justice and public service. Apart from his legal profession, he is actively involved in farming, social work, and content writing, reflecting his interest in agriculture, rural development, and community welfare. Through Dharitree Samrakshana Chaitanyam Society, he aspires to contribute to legal awareness, social empowerment, sustainable development, and community welfare, while encouraging individuals to participate in positive social change.",
-    interests: [
-      "Environmental Conservation",
-      "Community Development",
-      "Sustainable Living",
-      "Public Administration",
-    ],
-    
   {
     id: "bharath",
     name: "Bharath",
@@ -112,3 +97,4 @@ export const team: TeamMember[] = [
     ],
   },
 ];
+```
