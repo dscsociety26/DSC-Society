@@ -56,17 +56,31 @@ const Footer = () => {
           </div>
 
           {/* Social */}
-          <div>
-            <h4 className="font-heading font-semibold text-lg mb-4">Follow Us</h4>
-            <div className="flex gap-3">
-              {[ Instagram, Youtube].map((Icon, i) => (
-                <a key={i} href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors">
-                  <Icon size={18} />
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
+         <div>
+  <h4 className="font-heading font-semibold text-lg mb-4">
+    Follow Us
+  </h4>
+
+  <div className="flex gap-3">
+    <a
+      href="https://www.instagram.com/d_s_c_society/"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Follow DSC Society on Instagram"
+      className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors"
+    >
+      <Instagram size={18} />
+    </a>
+
+    <a
+      href="#"
+      aria-label="DSC Society YouTube"
+      className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors"
+    >
+      <Youtube size={18} />
+    </a>
+  </div>
+</div>
 
         <div className="mt-12 pt-6 border-t border-primary-foreground/20 text-center text-sm opacity-60">
           © {new Date().getFullYear()} Dharitree Samrakshana Chaitanyam Society. All rights reserved.
