@@ -1,5 +1,4 @@
 import saiPhoto from "@/assets/team/sai-charan-gupta.jpeg";
-
 export interface TeamMember {
   id: string;
   name: string;
