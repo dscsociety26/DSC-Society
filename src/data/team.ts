@@ -1,3 +1,5 @@
+import saiPhoto from "@/assets/team/sai-charan-gupta.jpg";
+
 export interface TeamMember {
   id: string;
   name: string;
@@ -13,10 +15,11 @@ export interface TeamMember {
 
 export const team: TeamMember[] = [
   {
+    
     id: "sai-charan-gupta",
     name: "D. Sai Charan Gupta",
     role: "Founder & President",
-
+    photo: saiPhoto,
     qualification: "Add verified educational qualification",
 
     currentWork: "Add current professional position",
