@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import hero1 from "@/assets/hero-1.jpeg";
-import hero2 from "@/assets/hero-2.jpg";
-import hero3 from "@/assets/hero-3.jpg";
-import hero4 from "@/assets/hero-4.jpg";
-import hero5 from "@/assets/hero-5.jpg";
+import cloth1 from "@/assets/cloth1.jpeg";
+import plant1 from "@/assets/plant1.jpeg";
+import clean1 from "@/assets/clean1.jpeg";
+import clean5 from "@/assets/clean5.jpeg";
+import cloth3 from "@/assets/cloth3.jpeg";
 
-const slides = [hero1, hero2, hero3, hero4, hero5];
+const slides = [cloth1, plant1, clean1, clean5, cloth3];
 
 const HeroSlider = () => {
 
