@@ -4,8 +4,8 @@ import { Shield, Recycle, Users, Heart, TreePine, Lightbulb, Award, HandHeart } 
 import HeroSlider from "@/components/HeroSlider";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import SectionFadeIn from "@/components/SectionFadeIn";
-import hero2 from "@/assets/hero-2.jpg";
-import hero3 from "@/assets/hero-3.jpg";
+import clean12 from "@/assets/clean12.jpeg";
+import plant8 from "@/assets/plant8.jpeg";
 import hero4 from "@/assets/hero-4.jpg";
 import plant1 from "@/assets/plant1.jpeg";
 import plant3 from "@/assets/plant3.jpeg";
