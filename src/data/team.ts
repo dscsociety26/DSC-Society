@@ -102,8 +102,6 @@ export const team: TeamMember[] = [
     id: "bharath",
     name: "Bharath",
     role: "Member",
-    qualification: "Add educational qualification",
-    currentWork: "Add current professional position",
     shortBio:
       "Contributing towards environmental protection and sustainable community initiatives.",
     biography:
