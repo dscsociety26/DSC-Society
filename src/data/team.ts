@@ -1,4 +1,4 @@
-```tsx
+
 import saiPhoto from "@/assets/team/sai-charan-gupta.jpeg";
 import tanojPhoto from "@/assets/team/pudi-tanoj.jpeg";
 import mundlapatiVenkateshPhoto from "@/assets/team/mundlapati-venkatesh.jpeg";
@@ -97,4 +97,3 @@ export const team: TeamMember[] = [
     ],
   },
 ];
-```
