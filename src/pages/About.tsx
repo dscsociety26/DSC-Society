@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { team } from "@/data/team";
 import { Button } from "@/components/ui/button";
 import { TreePine, Globe, Users, Lightbulb, Leaf, HeartHandshake, Award, Target } from "lucide-react";
 import SectionFadeIn from "@/components/SectionFadeIn";
@@ -18,15 +19,7 @@ const milestones = [
 
 ];
 
-const team = [
-  { name: "Sai Charn Gupta", role: "Founder & President", bio: "Scholar" },
-  { name: "RamaKanth", role: "Member", bio: "Scholar" },
-  { name: "Bharath", role: "Member", bio: "Scholar" },
-    { name: "Majji Madhavi Gayathri", role: "Member", bio: "Oceanographer | Subject Expert Manager | Environmental Advocate. " },
-    { name: "Sravani Sankarapu", role: "Member", bio: "M.Sc. Anthropology | Research Professional | Environmental Volunteer" },
 
-  
-];
 
 const About = () => {
   return (
@@ -138,23 +131,64 @@ const About = () => {
       {/* Team */}
       <SectionFadeIn>
         <section className="section-padding bg-muted/50">
-          <div className="container-narrow">
-            <h2 className="text-center font-heading text-3xl font-bold text-foreground mb-12">
-              Our <span className="text-gradient-green">Team</span>
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {team.map((member) => (
-                <div key={member.name} className="glass-card p-6 text-center hover-lift group">
-                  <div className="w-20 h-20 rounded-full gradient-green flex items-center justify-center mx-auto mb-4 text-primary-foreground font-heading font-bold text-2xl">
-                    {member.name.charAt(0)}
-                  </div>
-                  <h4 className="font-heading font-semibold text-foreground">{member.name}</h4>
-                  <p className="text-sm text-primary font-medium mt-1">{member.role}</p>
-                  <p className="text-sm text-muted-foreground mt-3">{member.bio}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+         
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+  {team.map((member) => (
+
+    <Link
+      key={member.id}
+      to={`/team/${member.id}`}
+      aria-label={`View full profile of ${member.name}`}
+      className="glass-card p-6 text-center hover-lift group block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+    >
+
+      {/* Profile Photograph */}
+
+      <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 gradient-green flex items-center justify-center text-primary-foreground font-heading font-bold text-3xl">
+
+        {member.photo ? (
+          <img
+            src={member.photo}
+            alt={member.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          member.name.charAt(0)
+        )}
+
+      </div>
+
+      {/* Name */}
+
+      <h4 className="font-heading font-semibold text-foreground">
+        {member.name}
+      </h4>
+
+      {/* Designation */}
+
+      <p className="text-sm text-primary font-medium mt-1">
+        {member.role}
+      </p>
+
+      {/* Short Introduction */}
+
+      <p className="text-sm text-muted-foreground mt-3">
+        {member.shortBio}
+      </p>
+
+      {/* Click Indicator */}
+
+      <span className="inline-block text-sm font-semibold text-primary mt-5 group-hover:underline">
+        View Full Profile →
+      </span>
+
+    </Link>
+
+  ))}
+
+</div>
+
         </section>
       </SectionFadeIn>
     </div>
