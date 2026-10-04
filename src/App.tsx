@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +18,10 @@ import JoinUs from "./pages/JoinUs";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminActivities from "./pages/admin/AdminActivities";
+
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -31,24 +36,34 @@ const App = () => {
 
           <main>
             <Routes>
+              {/* Public Website */}
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
-
-              {/* Individual team member profile */}
               <Route path="/team/:id" element={<TeamProfile />} />
-
               <Route path="/focus-areas" element={<FocusAreas />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/join-us" element={<JoinUs />} />
               <Route path="/contact" element={<Contact />} />
 
-              {/* 404 fallback */}
+              {/* Admin Panel */}
+              <Route path="/admin" element={<AdminLogin />} />
+              <Route
+                path="/admin/dashboard"
+                element={<AdminDashboard />}
+              />
+              <Route
+                path="/admin/activities"
+                element={<AdminActivities />}
+              />
+
+              {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
 
           <Footer />
         </BrowserRouter>
+
         <SpeedInsights />
       </TooltipProvider>
     </QueryClientProvider>
