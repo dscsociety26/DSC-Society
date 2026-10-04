@@ -22,7 +22,10 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminActivities from "./pages/admin/AdminActivities";
 import AdminTeam from "./pages/admin/AdminTeam";
-
+import AdminEvents from "./pages/admin/AdminEvents";
+import AdminGallery from "./pages/admin/AdminGallery";
+import AdminVolunteers from "./pages/admin/AdminVolunteers";
+import AdminContacts from "./pages/admin/AdminContacts";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -57,7 +60,13 @@ const App = () => {
                 element={<AdminActivities />}
               />
               <Route path="/admin/team" element={<AdminTeam />} />
-
+              <Route path="/admin/events" element={<AdminEvents />} />
+              <Route path="/admin/gallery" element={<AdminGallery />} />
+<Route
+  path="/admin/volunteers"
+  element={<AdminVolunteers />}
+/>
+<Route path="/admin/contacts" element={<AdminContacts />} />
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
