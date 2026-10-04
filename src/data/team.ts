@@ -10,6 +10,8 @@ import manyamtharunkumarPhoto from "@/assets/team/manyam-tharun-kumar.jpeg";
 import majjimadhavigayathriPhoto from "@/assets/team/majji-madhavi-gayathri.jpeg";
 import majjidivyaPhoto from "@/assets/team/majji-divya.jpeg";
 import sravanisankarapuPhoto from "@/assets/team/sravani-sankarapu.jpeg";
+import budiSatyanarayanaPhoto from "@/assets/team/budi-satyanarayana.jpeg";
+import guntakaKushankaraReddyPhoto from "@/assets/team/guntaka-kushankara-reddy.jpeg";
 
 export interface TeamMember {
   id: string;
@@ -178,6 +180,43 @@ export const team: TeamMember[] = [
       "Community Development",
       "Sustainable Living",
       "Public Administration",
+    ],
+  },
+
+  {
+    id: "budi-satyanarayana",
+    name: "Budi Satyanarayana",
+    role: "Member",
+    photo: budiSatyanarayanaPhoto,
+    origin: "Bobbili, Vizianagaram District, Andhra Pradesh",
+    shortBio:
+      "Young Entrepreneur | Environmental Enthusiast",
+    biography:
+      "Budi Satyanarayana hails from Bobbili, Vizianagaram District, Andhra Pradesh, and is a young entrepreneur driven by a strong passion for environmental conservation and social development. With an entrepreneurial mindset and a commitment to positive change, he believes that innovation, community participation, and responsible living are essential for building a sustainable future. Through his association with Dharitree Samrakshana Chaitanyam Society, he is committed to promoting environmental awareness, encouraging sustainable practices, and contributing to community-driven initiatives for a greener future.",
+    interests: [
+      "Environmental Conservation",
+      "Entrepreneurship",
+      "Community Development",
+      "Sustainable Living",
+    ],
+  },
+
+  {
+    id: "guntaka-kushankara-reddy",
+    name: "Guntaka Kushankara Reddy",
+    role: "Member",
+    photo: guntakaKushankaraReddyPhoto,
+    origin: "Andhra Pradesh",
+    shortBio:
+      "Telugu Pandit | Environmental Enthusiast",
+    biography:
+      "Hailing from a village near the ecologically rich Nallamala forest, Guntaka Kushankara Reddy carries a deep appreciation for nature and its invaluable role in sustaining life. A Telugu Pandit by profession, he combines his love for language, cultural values, and social responsibility with a strong passion for environmental conservation. His connection to rural life and the natural surroundings of the Nallamala region has shaped his belief in living harmoniously with nature. Through Dharitree Samrakshana Chaitanyam Society, he is committed to promoting environmental awareness, encouraging sustainable practices, and inspiring communities to protect the natural heritage we must preserve for future generations.",
+    interests: [
+      "Environmental Conservation",
+      "Telugu Language and Literature",
+      "Cultural Values",
+      "Sustainable Living",
+      "Community Awareness",
     ],
   },
 
