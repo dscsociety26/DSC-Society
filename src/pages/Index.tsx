@@ -23,9 +23,9 @@ const focusAreas = [
 ];
 
 const stats = [
-  { end: 5000, suffix: "+", label: "Students Engaged" },
-  { end: 120, suffix: "+", label: "Communities Reached" },
-  { end: 25000, suffix: " kg", label: "Waste Collected" },
+  { end: 3500, suffix: "+", label: "Students Engaged" },
+  { end: 40, suffix: "+", label: "Communities Reached" },
+  { end: 2500, suffix: " +", label: "Beneficiaries" },
   { end: 800, suffix: "+", label: "Volunteers" },
 ];
 
