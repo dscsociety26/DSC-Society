@@ -7,6 +7,9 @@ import tarakreddyPhoto from "@/assets/team/tarak-reddy.jpeg";
 import karikalyanPhoto from "@/assets/team/kari-kalyan.jpeg";
 import mindranasomubabuPhoto from "@/assets/team/mindrana-somubabu.jpeg";
 import manyamtharunkumarPhoto from "@/assets/team/manyam-tharun-kumar.jpeg";
+import majjimadhavigayathriPhoto from "@/assets/team/majji-madhavi-gayathri.jpeg";
+import majjidivyaPhoto from "@/assets/team/majji-divya.jpeg";
+import sravanisankarapuPhoto from "@/assets/team/sravani-sankarapu.jpeg";
 
 export interface TeamMember {
   id: string;
@@ -71,6 +74,24 @@ export const team: TeamMember[] = [
   },
 
   {
+    id: "majji-divya",
+    name: "Majji Divya",
+    role: "Member",
+    photo: majjidivyaPhoto,
+    origin: "Anakapalle, Andhra Pradesh",
+    shortBio:
+      "Research Scholar | Environmental Enthusiast",
+    biography:
+      "Majji Divya, originally from Anakapalle, Visakhapatnam, is a Research Scholar at GITAM with a strong passion for environmental conservation, research, and community engagement. She completed her B.Sc. and M.Sc. from the Central Tribal University of Andhra Pradesh (CTUAP), where she developed a keen interest in nature, sustainability, and environmental responsibility. ThroughDharitree Samrakshana Chaitanyam Society, she actively works to promote environmental awareness, encourage sustainable practices, and inspire communities to protect and preserve our natural heritage for future generations.",
+    interests: [
+      "Environmental Conservation",
+      "Community Development",
+      "Sustainable Living",
+      "Public Administration",
+    ],
+  },
+
+  {
     id: "mundlapati-venkatesh",
     name: "Mundlapati Venkatesh",
     role: "Member",
@@ -124,6 +145,24 @@ export const team: TeamMember[] = [
     ],
   },
 
+  {
+    id: "majji-madhavi-gayathri",
+    name: "Majji Madhavi Gayathri",
+    role: "Member",
+    photo: majjimadhavigayathriPhoto,
+    origin: "Anakapalle, Andhra Pradesh",
+    shortBio:
+      "Oceanographer | Subject Expert Manager | Environmental Advocate.",
+    biography:
+      "Majji Madhavi Gayathri, originally from Anakapalle, Visakhapatnam, holds an M.Sc. from IIT Bhubaneswar and a B.Sc. from the Central University of Andhra Pradesh (CUTAP). With a strong academic foundation in oceanography and environmental sciences, she currently serves as a Subject Expert Manager at GIS Vassal Labs, where she contributes her expertise to government projects related to oceanography and environmental applications.Passionate about environmental conservation and sustainable development, she works toward bridging scientific knowledge with meaningful community action. Through Dharitree Samrakshana Chaitanyam Society, she is committed to fostering environmental awareness, promoting sustainable practices, and inspiring communities to protect and preserve our oceans, ecosystems, and natural heritage for future generations.",
+    interests: [
+      "Environmental Conservation",
+      "Community Development",
+      "Sustainable Living",
+      "Public Administration",
+    ],
+  },
+  
   {
     id: "tarak-reddy",
     name: "Tarak Reddy",
@@ -196,6 +235,25 @@ export const team: TeamMember[] = [
     ],
   },
 
+    {
+    id: "sravani-sankarapu",
+    name: "Sravani Sankarapu",
+    role: "Member",
+    photo: sravanisankarapuPhoto,
+    origin: "Andhra Pradesh",
+    shortBio:
+      "M.Sc. Anthropology | Research Professional | Environmental Volunteer",
+    biography:
+      "Sravani Sankarapu holds a Master’s degree in Anthropology and has experience in research and community-oriented projects. She is keen to work towards environmental conservation and social well-being, with a particular interest in sustainable living, waste management, nature protection, and creating awareness among communities. She believes that protecting the environment is a shared responsibility and that consistent, community-driven efforts can bring meaningful change. Through her association with Dharitree Samrakshana Chaitanyam Society, she hopes to learn, participate, and contribute towards building a cleaner, greener, and more sustainable future.",
+    interests: [
+      "Environmental Conservation",
+      "Community Development",
+      "Sustainable Living",
+      "Public Administration",
+    ],
+  },
+
+  
   {
     id: "bharath",
     name: "Bharath",
