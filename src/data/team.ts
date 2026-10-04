@@ -2,6 +2,14 @@
 import saiPhoto from "@/assets/team/sai-charan-gupta.jpeg";
 import tanojPhoto from "@/assets/team/pudi-tanoj.jpeg";
 import mundlapatiVenkateshPhoto from "@/assets/team/mundlapati-venkatesh.jpeg";
+import kranthikumarPhoto from "@/assets/team/kranthi-kumar.jpeg";
+import saitejabandiPhoto from "@/assets/team/sai-teja-bandi.jpeg";
+import tarakreddyPhoto from "@/assets/team/tarak-reddy.jpeg";
+import karikalyanPhoto from "@/assets/team/kari-kalyan.jpeg";
+import mindranasomubabuPhoto from "@/assets/team/mindrana-somubabu.jpeg";
+import manyamtharunkumarPhoto from "@/assets/team/manyam-tharun-kumar.jpeg";
+
+
 
 export interface TeamMember {
   id: string;
@@ -74,7 +82,7 @@ export const team: TeamMember[] = [
     shortBio:
       "Engineer | Advocate | Farmer | Social Worker",
     biography:
-      "Mundlapati Venkatesh hails from Piduguralla, Guntur District, Andhra Pradesh, and holds a B.Tech in Electrical and Electronics Engineering from JNTU Kakinada and an LL.B. from Adikavi Nannaya University. He currently practices as an Advocate at the Guntur Bar, with a strong commitment to justice and public service. Apart from his legal profession, he is actively involved in farming, social work, and content writing, reflecting his interest in agriculture, rural development, and community welfare. Through Dharitree Samrakshana Chaitanyam Society, he aspires to contribute to legal awareness, social empowerment, sustainable development, and community welfare, while encouraging individuals to participate in positive social change.",
+      "Mundlapati Venkatesh hails from Piduguralla, Guntur District, Andhra Pradesh, and holds a B.Tech in Electrical and Electronics Engineering from JNTU Kakinada and LL.B. from Adikavi Nannaya University. He currently practices as an Advocate at the Guntur Bar, with a strong commitment to justice and public service. Apart from his legal profession, he is actively involved in farming, social work, and content writing, reflecting his interest in agriculture, rural development, and community welfare. Through Dharitree Samrakshana Chaitanyam Society, he aspires to contribute to legal awareness, social empowerment, sustainable development, and community welfare, while encouraging individuals to participate in positive social change.",
     interests: [
       "Environmental Conservation",
       "Community Development",
@@ -82,6 +90,117 @@ export const team: TeamMember[] = [
       "Public Administration",
     ],
   },
+
+{
+    id: "kranthi-kumar",
+    name: "V Kranthi Kumar",
+    role: "Member",
+    photo: kranthikumarPhoto,
+    origin: "Vijayawada, Andhra Pradesh",
+    shortBio:
+      "Ph.D. Research Scholar | Social Work Professional | Social Development Advocate",
+    biography:
+      "V. Kranthi Kumar is a Social Work professional and Ph.D. Research Scholar at Acharya Nagarjuna University, holding a Master of Social Work (MSW). With a strong interest in social research, inclusive education, rehabilitation, and community development, he is committed to addressing social challenges and improving the lives of vulnerable and marginalized communities. As a member of Dharitree Samrakshana Chaitanyam Society, he aspires to connect academic knowledge with practical social initiatives, promote equality and empowerment, and contribute towards building an inclusive, sustainable, and socially responsible society.",
+    interests: [
+      "Environmental Conservation",
+      "Community Development",
+      "Sustainable Living",
+      "Public Administration",
+    ],
+  },
+
+{
+    id: "sai-teja-bandi",
+    name: "Sai Teja Bandi",
+    role: "Member",
+    photo: saitejabandiPhoto,
+    origin: "Annavaram, Andhra Pradesh",
+    shortBio:
+      "Ph.D. Research ScholarResearch Scholar | Project Management | Data Analysis | Social Development",
+    biography:
+      "Sai Teja Bandi is a Research Scholar in Sociology and holds an Integrated M.A. in Sociology from Pondicherry University. With interests in project management, data analysis, and social development, he is committed to understanding community needs and promoting meaningful social change. Through Dharitree Samrakshana Chaitanya Society Society, he contributes to project planning, community surveys, data analysis, and reporting to support effective social initiatives. He is passionate about community welfare, environmental conservation, sustainable practices, and inclusive development, aspiring to connect research with practical action for a better and more responsible society.",
+    interests: [
+      "Environmental Conservation",
+      "Community Development",
+      "Sustainable Living",
+      "Public Administration",
+    ],
+  },
+
+
+{
+    id: "tarak-reddy",
+    name: "Tarak Reddy",
+    role: "Member",
+    photo: tarakreddyPhoto,
+    origin: "Guntur, Andhra Pradesh",
+    shortBio:
+      "Entrepreneur | Emerging Advocate | Social Development Enthusiast",
+    biography:
+      "Tarak Reddy hails from Guntur, Andhra Pradesh, and is an entrepreneur and emerging advocate with a strong interest in social development, community empowerment, and sustainable progress. Combining an entrepreneurial outlook with a growing understanding of the legal field, he believes that meaningful societal transformation requires innovation, inclusivity, and collective responsibility. As a member of Dharitree Samrakshana Chaitanyam Society, he is enthusiastic about contributing to initiatives spanning environmental conservation, healthcare awareness, youth empowerment, skill development, tribal welfare, and sustainable livelihoods. He aspires to utilize his entrepreneurial spirit and legal aspirations to support community-driven initiatives, encourage social participation, and contribute towards building an inclusive, empowered, and sustainable society.",
+    interests: [
+      "Environmental Conservation",
+      "Community Development",
+      "Sustainable Living",
+      "Public Administration",
+    ],
+  },
+
+
+{
+    id: "kari-kalyan",
+    name: "Kari Kalyan",
+    role: "Member",
+    photo: karikalyanPhoto,
+    origin: "Srikakulam , Andhra Pradesh",
+    shortBio:
+      "Public Administration Professional | Social Contributor",
+    biography:
+      "Kari Kalyan holds a Master’s degree in Public Administration and hails from Amavariputuka village, Srikakulam District, Andhra Pradesh. Currently serving in the Endowments Department, he has a keen interest in public administration, community welfare, and social responsibility. Beyond his professional commitments, he possesses a deep passion for environmental conservation and believes that protecting nature is fundamental to ensuring a sustainable future. As a member of Dharitree Samrakshana Chaitanyam Society, he is enthusiastic about promoting environmental awareness, encouraging responsible practices, and contributing to community-driven initiatives. Through his association with the society, he aspires to combine his administrative understanding with his commitment to environmental protection and inspire collective action towards a greener and more sustainable society.",
+    interests: [
+      "Environmental Conservation",
+      "Community Development",
+      "Sustainable Living",
+      "Public Administration",
+    ],
+  },
+
+{
+    id: "mindrana-somubabu",
+    name: "Mindrana Sombabu",
+    role: "Member",
+    photo: mindranasombabuPhoto,
+    origin: "Srikakulam , Andhra Pradesh",
+    shortBio:
+      "Ph.D. Research Scholar | Mathematician | Social Development Enthusiast",
+    biography:
+      "Mindrana Sombabu hails from Srikakulam District, Andhra Pradesh, and holds an M.Sc. in Mathematics. He is currently a Research Scholar in the Department of Mathematics at Acharya Nagarjuna University, Guntur, pursuing his Ph.D. With a strong academic foundation and an interest in knowledge-driven social progress, he believes that education, awareness, and community participation are essential for building a better society. As a member of Dharitree Samrakshana Chaitanyam Society, he is enthusiastic about contributing to initiatives in environmental conservation, healthcare awareness, youth empowerment, skill development, tribal welfare, and sustainable community development. Through his academic perspective and commitment to social responsibility, he aspires to encourage learning, collective action, and inclusive development for a more sustainable and empowered society.",
+    interests: [
+      "Environmental Conservation",
+      "Community Development",
+      "Sustainable Living",
+      "Public Administration",
+    ],
+  },
+
+{
+    id: "manyam-tharun-kumar",
+    name: "Manyam Tharun Kumar",
+    role: "Member",
+    photo: manyamtharunkumarPhoto,
+    origin: "Mangalagiri , Andhra Pradesh",
+    shortBio:
+      "Law Student | Young Entrepreneur | Social Responsibility Advocate",
+    biography:
+      "Manyam Tharun Kumar is currently pursuing B.A., LL.B. (Hons.) and hails from Atmakur village, Mangalagiri Mandal, Guntur District, Andhra Pradesh. With a keen interest in law and its potential to bring meaningful social change, he believes that legal awareness and civic responsibility are essential for building an equitable society. Beyond academics, he holds a deep appreciation for nature and environmental conservation, recognizing that protecting the environment is a shared responsibility. Through his association with Dharitree Samrakshana Chaitanyam DSC Society, he aspires to combine his legal knowledge with environmental consciousness, contribute to community welfare, and inspire sustainable practices for a greener and more responsible future.",
+    interests: [
+      "Environmental Conservation",
+      "Community Development",
+      "Sustainable Living",
+      "Public Administration",
+    ],
+  },
+
 
   {
     id: "bharath",
