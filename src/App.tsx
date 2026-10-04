@@ -21,6 +21,7 @@ import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminActivities from "./pages/admin/AdminActivities";
+import AdminTeam from "./pages/admin/AdminTeam";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ const App = () => {
                 path="/admin/activities"
                 element={<AdminActivities />}
               />
+              <Route path="/admin/team" element={<AdminTeam />} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />

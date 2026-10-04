@@ -19,6 +19,9 @@ import {
   Eye,
   Loader2,
   ArrowLeft,
+  Upload,
+  Image as ImageIcon,
+  X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -54,10 +57,21 @@ const AdminActivities = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [form, setForm] = useState(initialForm);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   const fetchActivities = async () => {
     setLoading(true);
@@ -81,49 +95,124 @@ const AdminActivities = () => {
     void fetchActivities();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setError("Please select a JPG, PNG, or WEBP image.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image size must be less than 5 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    setError("");
+    setSelectedImage(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
+
+  const removeSelectedImage = () => {
+    setSelectedImage(null);
+    setPreviewUrl("");
+  };
+
+  const uploadImage = async (): Promise<string | null> => {
+    if (!selectedImage) return form.image_url.trim() || null;
+
+    setUploading(true);
+
+    const extension =
+      selectedImage.name.split(".").pop()?.toLowerCase() || "jpg";
+
+    const filePath = `activities/${crypto.randomUUID()}.${extension}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("dsc-media 5")
+      .upload(filePath, selectedImage, {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: selectedImage.type,
+      });
+
+    if (uploadError) {
+      setUploading(false);
+      throw new Error(uploadError.message);
+    }
+
+    const { data } = supabase.storage
+      .from("dsc-media")
+      .getPublicUrl(filePath);
+
+    setUploading(false);
+    return data.publicUrl;
+  };
+
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
     setSaving(true);
     setError("");
     setSuccess("");
 
-    const payload = {
-      title: form.title.trim(),
-      slug: createSlug(form.title),
-      description: form.description.trim(),
-      image_url: form.image_url.trim() || null,
-      activity_date: form.activity_date || null,
-      location: form.location.trim() || null,
-      status: form.status,
-    };
+    try {
+      const imageUrl = await uploadImage();
 
-    if (!payload.title || !payload.slug || !payload.description) {
-      setError("Please enter a title and description.");
-      setSaving(false);
-      return;
-    }
+      const payload = {
+        title: form.title.trim(),
+        slug: createSlug(form.title),
+        description: form.description.trim(),
+        image_url: imageUrl,
+        activity_date: form.activity_date || null,
+        location: form.location.trim() || null,
+        status: form.status,
+      };
 
-    const result = editingId
-      ? await supabase
-          .from("activities")
-          .update(payload)
-          .eq("id", editingId)
-      : await supabase.from("activities").insert(payload);
+      if (!payload.title || !payload.slug || !payload.description) {
+        throw new Error("Please enter a title and description.");
+      }
 
-    if (result.error) {
-      setError(result.error.message);
-    } else {
+      const result = editingId
+        ? await supabase
+            .from("activities")
+            .update(payload)
+            .eq("id", editingId)
+        : await supabase.from("activities").insert(payload);
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+
       setSuccess(
         editingId
           ? "Activity updated successfully."
           : "Activity created successfully."
       );
+
       setForm(initialForm);
       setEditingId(null);
-      await fetchActivities();
-    }
+      setSelectedImage(null);
+      setPreviewUrl("");
 
-    setSaving(false);
+      await fetchActivities();
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again."
+      );
+    } finally {
+      setSaving(false);
+      setUploading(false);
+    }
   };
 
   const handleEdit = (activity: Activity) => {
@@ -137,8 +226,12 @@ const AdminActivities = () => {
       status:
         activity.status === "published" ? "published" : "draft",
     });
+
+    setSelectedImage(null);
+    setPreviewUrl(activity.image_url ?? "");
     setError("");
     setSuccess("");
+
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -188,6 +281,8 @@ const AdminActivities = () => {
   const cancelEdit = () => {
     setEditingId(null);
     setForm(initialForm);
+    setSelectedImage(null);
+    setPreviewUrl("");
     setError("");
     setSuccess("");
   };
@@ -215,8 +310,7 @@ const AdminActivities = () => {
           </div>
 
           <div className="rounded-lg border px-4 py-3 text-sm">
-            Total Activities:{" "}
-            <strong>{activities.length}</strong>
+            Total Activities: <strong>{activities.length}</strong>
           </div>
         </div>
 
@@ -260,23 +354,90 @@ const AdminActivities = () => {
                 />
               </div>
 
-              <div className="grid gap-5 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="image_url">Image URL</Label>
-                  <Input
-                    id="image_url"
-                    type="url"
-                    value={form.image_url}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        image_url: e.target.value,
-                      })
-                    }
-                    placeholder="https://..."
-                  />
+              <div className="space-y-2">
+                <Label>Activity Photograph</Label>
+
+                <div className="rounded-xl border-2 border-dashed p-5">
+                  {previewUrl ? (
+                    <div className="space-y-3">
+                      <img
+                        src={previewUrl}
+                        alt="Activity preview"
+                        className="max-h-64 w-full rounded-lg object-cover"
+                      />
+
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm text-muted-foreground">
+                          {selectedImage
+                            ? selectedImage.name
+                            : "Current activity image"}
+                        </span>
+
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={removeSelectedImage}
+                        >
+                          <X size={15} className="mr-1" />
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-3 py-5 text-center">
+                      <ImageIcon
+                        size={36}
+                        className="text-muted-foreground"
+                      />
+                      <p className="text-sm text-muted-foreground">
+                        Select an activity photograph
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="mt-4">
+                    <Label
+                      htmlFor="activity-image"
+                      className="inline-flex cursor-pointer items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted"
+                    >
+                      <Upload size={16} />
+                      Choose Image
+                    </Label>
+
+                    <Input
+                      id="activity-image"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      JPG, PNG, or WEBP. Maximum size: 5 MB.
+                    </p>
+                  </div>
                 </div>
 
+                <p className="text-xs text-muted-foreground">
+                  Alternatively, enter an existing image URL below.
+                </p>
+
+                <Input
+                  type="url"
+                  value={form.image_url}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      image_url: e.target.value,
+                    })
+                  }
+                  placeholder="https://..."
+                  disabled={!!selectedImage}
+                />
+              </div>
+
+              <div className="grid gap-5 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="activity_date">Activity Date</Label>
                   <Input
@@ -291,21 +452,21 @@ const AdminActivities = () => {
                     }
                   />
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  value={form.location}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      location: e.target.value,
-                    })
-                  }
-                  placeholder="e.g. Acharya Nagarjuna University"
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="location">Location</Label>
+                  <Input
+                    id="location"
+                    value={form.location}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        location: e.target.value,
+                      })
+                    }
+                    placeholder="Acharya Nagarjuna University"
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -347,7 +508,14 @@ const AdminActivities = () => {
                   ) : (
                     <Plus className="mr-2" size={16} />
                   )}
-                  {editingId ? "Update Activity" : "Save Activity"}
+
+                  {uploading
+                    ? "Uploading Image..."
+                    : saving
+                      ? "Saving..."
+                      : editingId
+                        ? "Update Activity"
+                        : "Save Activity"}
                 </Button>
 
                 {editingId && (
@@ -386,6 +554,14 @@ const AdminActivities = () => {
                 <Card key={activity.id}>
                   <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
                     <div className="min-w-0 flex-1 space-y-2">
+                      {activity.image_url && (
+                        <img
+                          src={activity.image_url}
+                          alt={activity.title}
+                          className="mb-3 h-40 w-full max-w-xs rounded-lg object-cover"
+                        />
+                      )}
+
                       <div className="flex flex-wrap items-center gap-2">
                         <h3 className="font-semibold">
                           {activity.title}
