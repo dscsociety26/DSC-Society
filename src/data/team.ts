@@ -1,5 +1,6 @@
 import saiPhoto from "@/assets/team/sai-charan-gupta.jpeg";
 import tanojPhoto from "@/assets/team/pudi-tanoj.jpeg";
+import mundlapativenkateshPhoto from "@/assets/team/mundlapati-venkatesh.jpeg";
 
 
 export interface TeamMember {
@@ -70,6 +71,45 @@ export const team: TeamMember[] = [
       "Public Administration",
     ],
   },
+  {
+    id: "mundlapati-venkatesh",
+    name: "Mundlapati Venkatesh",
+    role: "Member",
+    photo: mundlapativenkateshPhoto,
+    qualification: "B-Tech,LLB",
+    currentWork: "Advocate",
+    origin: "Piduguralla, Guntur District, Andhra Pradesh",
+    shortBio:
+      "Engineer | Advocate | Farmer | Social Worker ",
+    biography:
+      "Mundlapati Venkatesh hails from Piduguralla, Guntur District, Andhra Pradesh, and holds a B.Tech in Electrical and Electronics Engineering from JNTU Kakinada and an LL.B. from Adikavi Nannaya University. He currently practices as an Advocate at the Guntur Bar, with a strong commitment to justice and public service. Apart from his legal profession, he is actively involved in farming, social work, and content writing, reflecting his interest in agriculture, rural development, and community welfare. Through Dharitree Samrakshana Chaitanyam Society, he aspires to contribute to legal awareness, social empowerment, sustainable development, and community welfare, while encouraging individuals to participate in positive social change.",
+    interests: [
+      "Environmental Conservation",
+      "Community Development",
+      "Sustainable Living",
+      "Public Administration",
+    ],
+  },
+
+  {
+    id: "mundlapati-venkatesh",
+    name: "Mundlapati Venkatesh",
+    role: "Member",
+    photo: mundlapativenkateshPhoto,
+    qualification: "B-Tech,LLB",
+    currentWork: "Advocate",
+    origin: "Piduguralla, Guntur District, Andhra Pradesh",
+    shortBio:
+      "Engineer | Advocate | Farmer | Social Worker ",
+    biography:
+      "Mundlapati Venkatesh hails from Piduguralla, Guntur District, Andhra Pradesh, and holds a B.Tech in Electrical and Electronics Engineering from JNTU Kakinada and an LL.B. from Adikavi Nannaya University. He currently practices as an Advocate at the Guntur Bar, with a strong commitment to justice and public service. Apart from his legal profession, he is actively involved in farming, social work, and content writing, reflecting his interest in agriculture, rural development, and community welfare. Through Dharitree Samrakshana Chaitanyam Society, he aspires to contribute to legal awareness, social empowerment, sustainable development, and community welfare, while encouraging individuals to participate in positive social change.",
+    interests: [
+      "Environmental Conservation",
+      "Community Development",
+      "Sustainable Living",
+      "Public Administration",
+    ],
+    
   {
     id: "bharath",
     name: "Bharath",
