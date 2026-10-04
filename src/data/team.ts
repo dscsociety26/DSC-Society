@@ -10,8 +10,6 @@ import manyamtharunkumarPhoto from "@/assets/team/manyam-tharun-kumar.jpeg";
 import majjimadhavigayathriPhoto from "@/assets/team/majji-madhavi-gayathri.jpeg";
 import majjidivyaPhoto from "@/assets/team/majji-divya.jpeg";
 import sravanisankarapuPhoto from "@/assets/team/sravani-sankarapu.jpeg";
-import budisatyanarayanaPhoto from "@/assets/team/budi-satyanarayana.jpeg";
-import guntakakushankarareddyPhoto from "@/assets/team/guntaka-kushankara-reddy.jpeg";
 
 
 export interface TeamMember {
@@ -85,7 +83,7 @@ export const team: TeamMember[] = [
     shortBio:
       "Research Scholar | Environmental Enthusiast",
     biography:
-      "Majji Divya, originally from Anakapalle, Visakhapatnam, is a Research Scholar at GITAM with a strong passion for environmental conservation, research, and community engagement. She completed her B.Sc. and M.Sc. from the Central Tribal University of Andhra Pradesh (CTUAP), where she developed a keen interest in nature, sustainability, and environmental responsibility. ThroughDharitree Samrakshana Chaitanyam Society, she actively works to promote environmental awareness, encourage sustainable practices, and inspire communities to protect and preserve our natural heritage for future generations.",
+      "Majji Divya, originally from Anakapalle, Visakhapatnam, is a Research Scholar at GITAM with a strong passion for environmental conservation, research, and community engagement. She completed her B.Sc. and M.Sc. from the Central Tribal University of Andhra Pradesh (CTUAP), where she developed a keen interest in nature, sustainability, and environmental responsibility. Through Dharitree Samrakshana Chaitanyam Society, she actively works to promote environmental awareness, encourage sustainable practices, and inspire communities to protect and preserve our natural heritage for future generations.",
     interests: [
       "Environmental Conservation",
       "Community Development",
@@ -157,7 +155,7 @@ export const team: TeamMember[] = [
     shortBio:
       "Oceanographer | Subject Expert Manager | Environmental Advocate.",
     biography:
-      "Majji Madhavi Gayathri, originally from Anakapalle, Visakhapatnam, holds an M.Sc. from IIT Bhubaneswar and a B.Sc. from the Central University of Andhra Pradesh (CUTAP). With a strong academic foundation in oceanography and environmental sciences, she currently serves as a Subject Expert Manager at GIS Vassal Labs, where she contributes her expertise to government projects related to oceanography and environmental applications.Passionate about environmental conservation and sustainable development, she works toward bridging scientific knowledge with meaningful community action. Through Dharitree Samrakshana Chaitanyam Society, she is committed to fostering environmental awareness, promoting sustainable practices, and inspiring communities to protect and preserve our oceans, ecosystems, and natural heritage for future generations.",
+      "Majji Madhavi Gayathri, originally from Anakapalle, Visakhapatnam, holds an M.Sc. from IIT Bhubaneswar and a B.Sc. from the Central University of Andhra Pradesh (CUTAP). With a strong academic foundation in oceanography and environmental sciences, she currently serves as a Subject Expert Manager at GIS Vassal Labs, where she contributes her expertise to government projects related to oceanography and environmental applications. Passionate about environmental conservation and sustainable development, she works toward bridging scientific knowledge with meaningful community action. Through Dharitree Samrakshana Chaitanyam Society, she is committed to fostering environmental awareness, promoting sustainable practices, and inspiring communities to protect and preserve our oceans, ecosystems, and natural heritage for future generations.",
     interests: [
       "Environmental Conservation",
       "Community Development",
@@ -188,7 +186,6 @@ export const team: TeamMember[] = [
     id: "budi-satyanarayana",
     name: "Budi Satyanarayana",
     role: "Member",
-    photo: budisatyanarayanaPhoto,
     origin: "Bobbili, Vizianagaram District, Andhra Pradesh",
     shortBio:
       "Young Entrepreneur | Environmental Enthusiast",
@@ -206,7 +203,6 @@ export const team: TeamMember[] = [
     id: "guntaka-kushankara-reddy",
     name: "Guntaka Kushankara Reddy",
     role: "Member",
-    photo: guntakakushankarareddyPhoto,
     origin: "Andhra Pradesh",
     shortBio:
       "Telugu Pandit | Environmental Enthusiast",
