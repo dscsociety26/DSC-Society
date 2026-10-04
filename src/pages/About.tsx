@@ -22,6 +22,9 @@ const team = [
   { name: "Sai Charn Gupta", role: "Founder & President", bio: "Scholar" },
   { name: "RamaKanth", role: "Member", bio: "Scholar" },
   { name: "Bharath", role: "Member", bio: "Scholar" },
+    { name: "Majji Madhavi Gayathri", role: "Member", bio: "Oceanographer | Subject Expert Manager | Environmental Advocate. " },
+    { name: "Sravani Sankarapu", role: "Member", bio: "M.Sc. Anthropology | Research Professional | Environmental Volunteer" },
+
   
 ];
 
