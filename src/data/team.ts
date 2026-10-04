@@ -1,4 +1,4 @@
-import saiPhoto from "@/assets/team/sai-charan-gupta.jpg";
+import saiPhoto from "@/assets/team/sai-charan-gupta.jpeg";
 
 export interface TeamMember {
   id: string;
