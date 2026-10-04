@@ -1,6 +1,12 @@
-
+```tsx
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Leaf, MapPin, BriefcaseBusiness, GraduationCap } from "lucide-react";
+import {
+  ArrowLeft,
+  Leaf,
+  MapPin,
+  BriefcaseBusiness,
+  GraduationCap,
+} from "lucide-react";
 
 import { team } from "@/data/team";
 import { Button } from "@/components/ui/button";
@@ -33,9 +39,7 @@ const TeamProfile = () => {
 
   return (
     <div className="pt-20">
-
       {/* Profile Header */}
-
       <section className="section-padding bg-muted/40">
         <div className="container-narrow">
 
@@ -50,9 +54,7 @@ const TeamProfile = () => {
           <div className="grid md:grid-cols-[300px_1fr] gap-10 items-center">
 
             {/* Member Photograph */}
-
             <div className="rounded-2xl overflow-hidden aspect-[3/4] bg-muted shadow-lg">
-
               {member.photo ? (
                 <img
                   src={member.photo}
@@ -64,13 +66,10 @@ const TeamProfile = () => {
                   {member.name.charAt(0)}
                 </div>
               )}
-
             </div>
 
             {/* Basic Details */}
-
             <div>
-
               <span className="text-primary font-semibold text-sm uppercase tracking-wider">
                 DSC Society / Our Team
               </span>
@@ -129,13 +128,11 @@ const TeamProfile = () => {
 
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
       {/* Detailed Biography */}
-
       <SectionFadeIn>
         <section className="section-padding">
           <div className="container-narrow max-w-4xl">
@@ -155,15 +152,12 @@ const TeamProfile = () => {
             </div>
 
             {/* Areas of Interest */}
-
             <div className="glass-card p-6 md:p-8">
-
               <h3 className="font-heading text-2xl font-bold mb-6">
                 Areas of Interest
               </h3>
 
               <div className="flex flex-wrap gap-3">
-
                 {member.interests.map((interest) => (
                   <span
                     key={interest}
@@ -173,12 +167,10 @@ const TeamProfile = () => {
                     {interest}
                   </span>
                 ))}
-
               </div>
             </div>
 
             {/* Return Button */}
-
             <div className="text-center mt-12">
               <Button asChild>
                 <Link to="/about">
@@ -191,9 +183,9 @@ const TeamProfile = () => {
           </div>
         </section>
       </SectionFadeIn>
-
     </div>
   );
 };
 
 export default TeamProfile;
+```
