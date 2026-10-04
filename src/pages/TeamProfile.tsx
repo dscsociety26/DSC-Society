@@ -3,8 +3,6 @@ import {
   ArrowLeft,
   Leaf,
   MapPin,
-  BriefcaseBusiness,
-  GraduationCap,
 } from "lucide-react";
 
 import { team } from "@/data/team";
@@ -38,6 +36,7 @@ const TeamProfile = () => {
 
   return (
     <div className="pt-20">
+
       {/* Profile Header */}
       <section className="section-padding bg-muted/40">
         <div className="container-narrow">
@@ -85,22 +84,23 @@ const TeamProfile = () => {
                 {member.shortBio}
               </p>
 
-                {member.origin && (
-                  <div className="flex items-start gap-3">
-                    <MapPin className="text-primary mt-1 shrink-0" />
-                    <div>
-                      <p className="font-semibold">
-                        Background
-                      </p>
-                      <p className="text-muted-foreground">
-                        {member.origin}
-                      </p>
-                    </div>
-                  </div>
-                )}
+              {member.origin && (
+                <div className="flex items-start gap-3 mt-6">
+                  <MapPin className="text-primary mt-1 shrink-0" />
 
-              </div>
+                  <div>
+                    <p className="font-semibold">
+                      Background
+                    </p>
+
+                    <p className="text-muted-foreground">
+                      {member.origin}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
+
           </div>
         </div>
       </section>
@@ -156,6 +156,7 @@ const TeamProfile = () => {
           </div>
         </section>
       </SectionFadeIn>
+
     </div>
   );
 };
