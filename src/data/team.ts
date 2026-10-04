@@ -58,7 +58,7 @@ export const team: TeamMember[] = [
     photo: tanojPhoto,
     qualification: "Research Scholar",
     currentWork: "Scholar",
-    origin: "Amavariputuka village, Srikakulam district",
+    origin: "Anakapalle, Visakhapatnam",
     shortBio:
       "Research Scholar | Historian | Environmental Advocate | Youth & Community Activist",
     biography:
