@@ -1,4 +1,3 @@
-```tsx
 import saiPhoto from "@/assets/team/sai-charan-gupta.jpeg";
 
 export interface TeamMember {
