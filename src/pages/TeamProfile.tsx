@@ -85,32 +85,6 @@ const TeamProfile = () => {
                 {member.shortBio}
               </p>
 
-              <div className="mt-6 space-y-4">
-
-                <div className="flex items-start gap-3">
-                  <GraduationCap className="text-primary mt-1 shrink-0" />
-                  <div>
-                    <p className="font-semibold">
-                      Educational Qualification
-                    </p>
-                    <p className="text-muted-foreground">
-                      {member.qualification}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <BriefcaseBusiness className="text-primary mt-1 shrink-0" />
-                  <div>
-                    <p className="font-semibold">
-                      Current Position
-                    </p>
-                    <p className="text-muted-foreground">
-                      {member.currentWork}
-                    </p>
-                  </div>
-                </div>
-
                 {member.origin && (
                   <div className="flex items-start gap-3">
                     <MapPin className="text-primary mt-1 shrink-0" />
