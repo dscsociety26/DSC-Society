@@ -1,184 +1,217 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import SectionFadeIn from "@/components/SectionFadeIn";
-import hero1 from "@/assets/hero-1.jpg";
-import hero2 from "@/assets/hero-2.jpg";
-import cloth1 from "@/assets/cloth1.jpeg";
-import cloth2 from "@/assets/cloth2.jpeg";
-import cloth3 from "@/assets/cloth3.jpeg";
-import cloth4 from "@/assets/cloth4.jpeg";
-import plant1 from "@/assets/plant1.jpeg";
-import plant2 from "@/assets/plant2.jpeg";
-import plant3 from "@/assets/plant3.jpeg";
-import plant4 from "@/assets/plant4.jpeg";
-import plant5 from "@/assets/plant5.jpeg";
-import plant6 from "@/assets/plant6.jpeg";
-import plant7 from "@/assets/plant7.jpeg";
-import plant8 from "@/assets/plant8.jpeg";
-import clean1 from "@/assets/clean1.jpeg";
-import clean2 from "@/assets/clean2.jpeg";
-import clean3 from "@/assets/clean3.jpeg";
-import clean4 from "@/assets/clean4.jpeg";
-import clean5 from "@/assets/clean5.jpeg";
-import clean6 from "@/assets/clean6.jpeg";
-import clean7 from "@/assets/clean7.jpeg";
-import clean8 from "@/assets/clean8.jpeg";
-import clean9 from "@/assets/clean9.jpeg";
-import clean10 from "@/assets/clean10.jpeg";
-import clean11 from "@/assets/clean11.jpeg";
-import clean12 from "@/assets/clean12.jpeg";
-import clean13 from "@/assets/clean13.jpeg";
-import clean14 from "@/assets/clean14.jpeg";
-import paper1 from "@/assets/paper1.jpeg";
-import paper2 from "@/assets/paper2.jpeg";
-import paper3 from "@/assets/paper3.jpeg";
-import paper4 from "@/assets/paper4.jpeg";
-import paper5 from "@/assets/paper5.jpeg";
-import paper6 from "@/assets/paper6.jpeg";
-import paper7 from "@/assets/paper7.jpeg";
-import paper8 from "@/assets/paper8.jpeg";
-import paper9 from "@/assets/paper9.jpeg";
-import paper10 from "@/assets/paper10.jpeg";
-import paper11 from "@/assets/paper11.jpeg";
-import paper12 from "@/assets/paper12.jpeg";
-import poster1 from "@/assets/poster1.jpeg";
-import poster2 from "@/assets/poster2.jpeg";
-import poster3 from "@/assets/poster3.jpeg";
-import poster4 from "@/assets/poster4.jpeg";
-import poster5 from "@/assets/poster5.jpeg";
+import SectionFadeIn from "../components/SectionFadeIn";
+import { supabase } from "../lib/supabase";
 
+type GalleryItem = {
+  id: string;
+  title: string;
+  image_url: string;
+  caption: string | null;
+  category: string | null;
+  display_order: number;
+};
 
-const categories = ["All", "Aasara Vedika", "Tree Plantation", "Zero Plastic Campaign", "Posters", "Papers Clips"];
+type GalleryCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  display_order: number;
+  status: string;
+};
 
-const images = [
-  { src: cloth1, category: "Aasara Vedika" },
-  { src: cloth2, category: "Aasara Vedika" },
-  { src: cloth3, category: "Aasara Vedika" },
-  { src: cloth4, category: "Aasara Vedika" },
-  { src: plant1, category: "Tree Plantation" },
-  { src: plant2, category: "Tree Plantation" },
-  { src: plant3, category: "Tree Plantation" },
-  { src: plant4, category: "Tree Plantation" },
-  { src: plant5, category: "Tree Plantation" },
-  { src: plant6, category: "Tree Plantation" },
-  { src: plant7, category: "Tree Plantation" },
-  { src: plant8, category: "Tree Plantation" },
-  { src: clean1, category: "Zero Plastic Campaign" },
-  { src: clean2, category: "Zero Plastic Campaign" }, 
-  { src: clean3, category: "Zero Plastic Campaign" },
-  { src: clean4, category: "Zero Plastic Campaign" },
-  { src: clean5, category: "Zero Plastic Campaign" },
-  { src: clean6, category: "Zero Plastic Campaign" },
-  { src: clean7, category: "Zero Plastic Campaign" },
-  { src: clean8, category: "Zero Plastic Campaign" },
-  { src: clean9, category: "Zero Plastic Campaign" },
-  { src: clean10, category: "Zero Plastic Campaign" },
-  { src: clean11, category: "Zero Plastic Campaign" },
-  { src: clean12, category: "Zero Plastic Campaign" },
-  { src: clean13, category: "Zero Plastic Campaign" },
-  { src: clean14, category: "Zero Plastic Campaign" },
-  { src: paper1, category: "Papers Clips" },
-  { src: paper2, category: "Papers Clips" },
-  { src: paper3, category: "Papers Clips" },
-  { src: paper4, category: "Papers Clips" },
-  { src: paper5, category: "Papers Clips" },
-  { src: paper6, category: "Papers Clips" },
-  { src: paper7, category: "Papers Clips" },
-  { src: paper8, category: "Papers Clips" },
-  { src: paper9, category: "Papers Clips" },
-  { src: paper10, category: "Papers Clips" },
-  { src: paper11, category: "Papers Clips" },
-  { src: paper12, category: "Papers Clips" },
-  { src: poster1, category: "Posters" },
-  { src: poster2, category: "Posters" },
-  { src: poster3, category: "Posters" },
-  { src: poster4, category: "Posters" },
-  { src: poster5, category: "Posters" },
-
-  
-
-
-
-
-];
-
-const Gallery = () => {
+export default function Gallery() {
+  const [images, setImages] = useState<GalleryItem[]>([]);
+  const [categories, setCategories] = useState<GalleryCategory[]>([]);
   const [filter, setFilter] = useState("All");
-  const [lightbox, setLightbox] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-const excludedFromAll = ["Papers Clips", "Posters"];
+  useEffect(() => {
+    const loadGallery = async () => {
+      setLoading(true);
+      setError("");
 
-const filtered =
-  filter === "All"
-    ? images.filter((img) => !excludedFromAll.includes(img.category))
-    : images.filter((img) => img.category === filter);
-  
+      const [galleryResult, categoryResult] = await Promise.all([
+        supabase
+          .from("gallery")
+          .select(
+            "id, title, image_url, caption, category, display_order"
+          )
+          .eq("status", "published")
+          .not("category", "is", null)
+          .order("display_order", { ascending: true }),
+
+        supabase
+          .from("gallery_categories")
+          .select("id, name, slug, display_order, status")
+          .eq("status", "active")
+          .order("display_order", { ascending: true }),
+      ]);
+
+      if (galleryResult.error) {
+        console.error("Gallery load error:", galleryResult.error);
+        setError("Unable to load gallery.");
+        setImages([]);
+      } else {
+        setImages(galleryResult.data ?? []);
+      }
+
+      if (categoryResult.error) {
+        console.error(
+          "Gallery categories load error:",
+          categoryResult.error
+        );
+        setError("Unable to load gallery categories.");
+        setCategories([]);
+      } else {
+        setCategories(categoryResult.data ?? []);
+      }
+
+      setLoading(false);
+    };
+
+    void loadGallery();
+  }, []);
+
+  const categoryNames = [
+    "All",
+    ...categories.map((category) => category.name),
+  ];
+
+  const filtered =
+    filter === "All"
+      ? images
+      : images.filter((image) => image.category === filter);
+
   return (
-    <div className="pt-20">
-      <section className="relative h-[50vh] min-h-[400px] overflow-hidden">
-        <img src={hero1} alt="Gallery" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-dsc-dark/60" />
-        <div className="relative z-10 flex h-full items-center justify-center">
-          <div className="text-center">
-            <h1 className="font-heading text-4xl md:text-5xl font-bold text-primary-foreground">Gallery</h1>
-            <p className="mt-4 text-lg text-primary-foreground/80">Moments from our environmental journey</p>
-          </div>
+    <div className="min-h-screen bg-white">
+      {/* Hero */}
+      <section className="relative flex min-h-[55vh] items-center justify-center overflow-hidden">
+        <img
+          src="https://fgeyireivkkchwudqxpp.supabase.co/storage/v1/object/public/dsc-media%205/gallery/legacy/cloth1.jpeg"
+          alt="DSC Society Gallery"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+
+        <div className="absolute inset-0 bg-black/55" />
+
+        <div className="relative z-10 mx-auto max-w-4xl px-6 text-center text-white">
+          <SectionFadeIn>
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-white/80">
+              DSC Society
+            </p>
+
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+              Our Gallery
+            </h1>
+
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-white/85 sm:text-lg">
+              Moments from our environmental, social responsibility and
+              community initiatives.
+            </p>
+          </SectionFadeIn>
         </div>
       </section>
 
-      <SectionFadeIn>
-        <section className="section-padding">
-          <div className="container-narrow">
-            {/* Filters */}
-            <div className="flex flex-wrap justify-center gap-3 mb-12">
-              {categories.map((cat) => (
+      {/* Gallery */}
+      <section className="px-6 py-16 sm:px-10 lg:px-16">
+        <div className="mx-auto max-w-7xl">
+          {/* Filters */}
+          <div className="mb-10 flex flex-wrap justify-center gap-3">
+            {categoryNames.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setFilter(category)}
+                className={`rounded-full px-5 py-2.5 text-sm font-medium transition ${
+                  filter === category
+                    ? "bg-black text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+          {loading && (
+            <div className="py-20 text-center text-gray-500">
+              Loading gallery...
+            </div>
+          )}
+
+          {!loading && error && (
+            <div className="py-20 text-center text-red-600">
+              {error}
+            </div>
+          )}
+
+          {!loading && !error && filtered.length === 0 && (
+            <div className="py-20 text-center text-gray-500">
+              No gallery images available.
+            </div>
+          )}
+
+          {!loading && !error && filtered.length > 0 && (
+            <div className="columns-1 gap-5 sm:columns-2 lg:columns-3">
+              {filtered.map((image, index) => (
                 <button
-                  key={cat}
-                  onClick={() => setFilter(cat)}
-                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
-                    filter === cat
-                      ? "gradient-green text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary"
-                  }`}
+                  key={image.id}
+                  type="button"
+                  onClick={() => setSelectedImage(image.image_url)}
+                  className="group mb-5 block w-full overflow-hidden rounded-2xl text-left"
                 >
-                  {cat}
+                  <img
+                    src={image.image_url}
+                    alt={
+                      image.caption ||
+                      image.title ||
+                      image.category ||
+                      "DSC Society Gallery"
+                    }
+                    loading={index < 6 ? "eager" : "lazy"}
+                    className="h-auto w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+                  />
+
+                  {image.caption && (
+                    <div className="px-1 pt-2">
+                      <p className="text-sm text-gray-600">
+                        {image.caption}
+                      </p>
+                    </div>
+                  )}
                 </button>
               ))}
             </div>
-
-            {/* Masonry-ish grid */}
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-              {filtered.map((img, i) => (
-                <div
-                  key={i}
-                  className="break-inside-avoid overflow-hidden rounded-xl cursor-pointer hover-lift"
-                  onClick={() => setLightbox(img.src)}
-                >
-                  <img
-                    src={img.src}
-                    alt={img.category}
-                    className={`w-full object-cover hover:scale-105 transition-transform duration-500 ${
-                      i % 3 === 0 ? "aspect-[4/5]" : i % 3 === 1 ? "aspect-[4/3]" : "aspect-square"
-                    }`}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </SectionFadeIn>
+          )}
+        </div>
+      </section>
 
       {/* Lightbox */}
-      {lightbox && (
-        <div className="fixed inset-0 z-50 bg-dsc-dark/90 flex items-center justify-center p-4" onClick={() => setLightbox(null)}>
-          <button className="absolute top-6 right-6 text-primary-foreground" onClick={() => setLightbox(null)}>
-            <X size={32} />
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button
+            type="button"
+            onClick={() => setSelectedImage(null)}
+            className="absolute right-5 top-5 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20"
+            aria-label="Close image"
+          >
+            <X size={28} />
           </button>
-          <img src={lightbox} alt="Preview" className="max-w-full max-h-[90vh] rounded-xl object-contain" />
+
+          <img
+            src={selectedImage}
+            alt="Gallery preview"
+            className="max-h-[90vh] max-w-[95vw] rounded-lg object-contain"
+            onClick={(event) => event.stopPropagation()}
+          />
         </div>
       )}
     </div>
   );
-};
-
-export default Gallery;
+}

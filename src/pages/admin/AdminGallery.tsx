@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { supabase } from "../../lib/supabase";
@@ -10,6 +9,7 @@ type GalleryItem = {
   title: string;
   image_url: string;
   caption: string | null;
+  category: string | null;
   activity_id: string | null;
   display_order: number;
   status: GalleryStatus;
@@ -21,10 +21,19 @@ type ActivityOption = {
   title: string;
 };
 
+type GalleryCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  display_order: number;
+  status: "active" | "inactive";
+};
+
 type GalleryForm = {
   title: string;
   image_url: string;
   caption: string;
+  category: string;
   activity_id: string;
   display_order: number;
   status: GalleryStatus;
@@ -34,6 +43,7 @@ const initialForm: GalleryForm = {
   title: "",
   image_url: "",
   caption: "",
+  category: "",
   activity_id: "",
   display_order: 0,
   status: "draft",
@@ -51,6 +61,7 @@ const statusStyles: Record<GalleryStatus, string> = {
 export default function AdminGallery() {
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [activities, setActivities] = useState<ActivityOption[]>([]);
+  const [categories, setCategories] = useState<GalleryCategory[]>([]);
   const [form, setForm] = useState<GalleryForm>(initialForm);
 
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -62,6 +73,10 @@ export default function AdminGallery() {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [categorySaving, setCategorySaving] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -88,18 +103,26 @@ export default function AdminGallery() {
     setLoading(true);
     setError("");
 
-    const [galleryResult, activityResult] = await Promise.all([
-      supabase
-        .from("gallery")
-        .select("*")
-        .order("display_order", { ascending: true })
-        .order("created_at", { ascending: false }),
+    const [galleryResult, activityResult, categoryResult] =
+      await Promise.all([
+        supabase
+          .from("gallery")
+          .select("*")
+          .order("display_order", { ascending: true })
+          .order("created_at", { ascending: false }),
 
-      supabase
-        .from("activities")
-        .select("id, title")
-        .order("title", { ascending: true }),
-    ]);
+        supabase
+          .from("activities")
+          .select("id, title")
+          .order("title", { ascending: true }),
+
+        supabase
+          .from("gallery_categories")
+          .select("id, name, slug, display_order, status")
+          .eq("status", "active")
+          .order("display_order", { ascending: true })
+          .order("name", { ascending: true }),
+      ]);
 
     if (galleryResult.error) {
       setError(galleryResult.error.message);
@@ -111,6 +134,12 @@ export default function AdminGallery() {
       setError(activityResult.error.message);
     } else {
       setActivities(activityResult.data ?? []);
+    }
+
+    if (categoryResult.error) {
+      setError(categoryResult.error.message);
+    } else {
+      setCategories((categoryResult.data ?? []) as GalleryCategory[]);
     }
 
     setLoading(false);
@@ -181,6 +210,7 @@ export default function AdminGallery() {
       title: item.title,
       image_url: item.image_url,
       caption: item.caption ?? "",
+      category: item.category ?? "",
       activity_id: item.activity_id ?? "",
       display_order: item.display_order ?? 0,
       status: item.status,
@@ -195,6 +225,107 @@ export default function AdminGallery() {
     }
 
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function addCategory() {
+    const name = newCategoryName.trim();
+
+    if (!name) {
+      setError("Please enter a category name.");
+      return;
+    }
+
+    const slug = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    if (!slug) {
+      setError("Please enter a valid category name.");
+      return;
+    }
+
+    const duplicate = categories.some(
+      (category) => category.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (duplicate) {
+      setError("This category already exists.");
+      return;
+    }
+
+    setCategorySaving(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const nextOrder =
+        categories.length > 0
+          ? Math.max(...categories.map((category) => category.display_order)) + 1
+          : 1;
+
+      const { data, error: insertError } = await supabase
+        .from("gallery_categories")
+        .insert({
+          name,
+          slug,
+          display_order: nextOrder,
+          status: "active",
+        })
+        .select("id, name, slug, display_order, status")
+        .single();
+
+      if (insertError) throw insertError;
+
+      const newCategory = data as GalleryCategory;
+
+      setCategories((current) =>
+        [...current, newCategory].sort(
+          (a, b) =>
+            a.display_order - b.display_order ||
+            a.name.localeCompare(b.name)
+        )
+      );
+
+      setForm((current) => ({
+        ...current,
+        category: newCategory.name,
+      }));
+
+      setNewCategoryName("");
+      setShowCategoryForm(false);
+      setSuccess(`Category "${newCategory.name}" added successfully.`);
+    } catch (err) {
+      console.error("Add category error:", err);
+
+      if (err && typeof err === "object") {
+        const supabaseError = err as {
+          message?: string;
+          code?: string;
+          details?: string;
+          hint?: string;
+        };
+
+        setError(
+          [
+            supabaseError.message,
+            supabaseError.code ? `Code: ${supabaseError.code}` : "",
+            supabaseError.details ? `Details: ${supabaseError.details}` : "",
+            supabaseError.hint ? `Hint: ${supabaseError.hint}` : "",
+          ]
+            .filter(Boolean)
+            .join(" | ") || "Unable to add category."
+        );
+      } else {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Unable to add category."
+        );
+      }
+    } finally {
+      setCategorySaving(false);
+    }
   }
 
   async function uploadImage(file: File): Promise<string> {
@@ -236,6 +367,11 @@ export default function AdminGallery() {
       return;
     }
 
+    if (!form.category) {
+      setError("Please select a gallery category.");
+      return;
+    }
+
     if (editingId && !selectedImages.length && !form.image_url) {
       setError("Please select an image.");
       return;
@@ -261,6 +397,7 @@ export default function AdminGallery() {
           title: form.title.trim(),
           image_url: imageUrl,
           caption: form.caption.trim() || null,
+          category: form.category,
           activity_id: form.activity_id || null,
           display_order: Number(form.display_order) || 0,
           status: form.status,
@@ -294,6 +431,7 @@ export default function AdminGallery() {
           title: form.title.trim(),
           image_url: imageUrl,
           caption: form.caption.trim() || null,
+          category: form.category,
           activity_id: form.activity_id || null,
           display_order:
             (Number(form.display_order) || 0) + index,
@@ -385,7 +523,7 @@ export default function AdminGallery() {
           </h1>
 
           <p className="mt-2 text-slate-600">
-            Upload and organize multiple photographs from the same DSC Society event.
+            Upload and organize photographs by category and event.
           </p>
         </div>
 
@@ -429,6 +567,82 @@ export default function AdminGallery() {
                   placeholder="e.g. Plant Protection Challenge"
                   className="w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                 />
+              </div>
+
+              <div>
+                <div className="mb-1 flex items-center justify-between">
+                  <label className="block text-sm font-medium text-slate-700">
+                    Gallery Category *
+                  </label>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowCategoryForm((current) => !current);
+                      setError("");
+                    }}
+                    className="text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+                  >
+                    {showCategoryForm ? "Cancel" : "+ Add New Category"}
+                  </button>
+                </div>
+
+                <select
+                  required
+                  value={form.category}
+                  onChange={(e) =>
+                    setForm({ ...form, category: e.target.value })
+                  }
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5"
+                >
+                  <option value="">Select category</option>
+
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+
+                {showCategoryForm && (
+                  <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50/50 p-3">
+                    <label className="mb-1 block text-sm font-medium text-slate-700">
+                      New Category Name
+                    </label>
+
+                    <div className="flex gap-2">
+                      <input
+                        value={newCategoryName}
+                        onChange={(e) =>
+                          setNewCategoryName(e.target.value)
+                        }
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            void addCategory();
+                          }
+                        }}
+                        placeholder="e.g. Community Outreach"
+                        className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+                        disabled={categorySaving}
+                      />
+
+                      <button
+                        type="button"
+                        onClick={() => void addCategory()}
+                        disabled={categorySaving}
+                        className="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-60"
+                      >
+                        {categorySaving ? "Adding..." : "Add"}
+                      </button>
+                    </div>
+
+                    <p className="mt-2 text-xs text-slate-500">
+                      The new category will immediately become available
+                      for photo uploads.
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div>
@@ -623,7 +837,7 @@ export default function AdminGallery() {
                     type="button"
                     onClick={resetForm}
                     disabled={saving}
-                    className="rounded-lg border border-slate-300 px-4 py-3 font-medium text-slate-700 hover:bg-slate-50"
+                    className="rounded-lg border border-slate-300 px-4 py-3 font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
                   >
                     Cancel
                   </button>
@@ -632,130 +846,109 @@ export default function AdminGallery() {
             </form>
           </section>
 
-          <section>
-            <div className="mb-4 flex items-center justify-between">
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-xl font-semibold text-slate-900">
-                  Gallery Collection
+                  Gallery Items
                 </h2>
 
-                <p className="mt-1 text-sm text-slate-500">
-                  Photos are stored as individual records and can share the same event title.
+                <p className="text-sm text-slate-500">
+                  {items.length} total gallery records
                 </p>
               </div>
-
-              <span className="shrink-0 rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-800">
-                {items.length} Images
-              </span>
             </div>
 
             {loading ? (
-              <div className="rounded-xl border bg-white p-8 text-center text-slate-500">
+              <div className="py-16 text-center text-slate-500">
                 Loading gallery...
               </div>
             ) : items.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center">
-                <p className="font-medium text-slate-700">
-                  No gallery images added yet.
-                </p>
-
-                <p className="mt-1 text-sm text-slate-500">
-                  Select multiple photographs to create your first collection.
-                </p>
+              <div className="py-16 text-center text-slate-500">
+                No gallery items found.
               </div>
             ) : (
               <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {items.map((item) => {
-                  const activity = activities.find(
-                    (a) => a.id === item.activity_id
-                  );
-
-                  return (
-                    <article
-                      key={item.id}
-                      className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
-                    >
+                {items.map((item) => (
+                  <article
+                    key={item.id}
+                    className="overflow-hidden rounded-xl border border-slate-200 bg-white"
+                  >
+                    <div className="aspect-[4/3] overflow-hidden bg-slate-100">
                       <img
                         src={item.image_url}
                         alt={item.title}
-                        loading="lazy"
-                        className="h-52 w-full object-cover"
+                        className="h-full w-full object-cover"
                       />
+                    </div>
 
-                      <div className="p-4">
-                        <div className="flex items-start justify-between gap-2">
-                          <h3 className="font-semibold text-slate-900">
-                            {item.title}
-                          </h3>
+                    <div className="p-4">
+                      <div className="mb-2 flex items-start justify-between gap-3">
+                        <h3 className="font-semibold text-slate-900">
+                          {item.title}
+                        </h3>
 
-                          <span
-                            className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[item.status]}`}
-                          >
-                            {item.status}
-                          </span>
-                        </div>
-
-                        {item.caption && (
-                          <p className="mt-2 line-clamp-3 text-sm text-slate-600">
-                            {item.caption}
-                          </p>
-                        )}
-
-                        {activity && (
-                          <p className="mt-2 text-xs text-slate-500">
-                            Activity: {activity.title}
-                          </p>
-                        )}
-
-                        <p className="mt-1 text-xs text-slate-500">
-                          Display order: {item.display_order}
-                        </p>
-
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          <button
-                            type="button"
-                            onClick={() => editItem(item)}
-                            className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                          >
-                            Edit
-                          </button>
-
-                          {item.status !== "published" && (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                void updateStatus(item, "published")
-                              }
-                              className="rounded-lg border border-emerald-200 px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50"
-                            >
-                              Publish
-                            </button>
-                          )}
-
-                          {item.status !== "draft" && (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                void updateStatus(item, "draft")
-                              }
-                              className="rounded-lg border border-amber-200 px-3 py-2 text-sm font-medium text-amber-700 hover:bg-amber-50"
-                            >
-                              Unpublish
-                            </button>
-                          )}
-
-                          <button
-                            type="button"
-                            onClick={() => void deleteItem(item)}
-                            className="rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
-                          >
-                            Delete
-                          </button>
-                        </div>
+                        <span
+                          className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[item.status]}`}
+                        >
+                          {item.status}
+                        </span>
                       </div>
-                    </article>
-                  );
-                })}
+
+                      {item.category && (
+                        <span className="mb-3 inline-block rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                          {item.category}
+                        </span>
+                      )}
+
+                      {item.caption && (
+                        <p className="mb-3 line-clamp-2 text-sm text-slate-600">
+                          {item.caption}
+                        </p>
+                      )}
+
+                      <div className="mb-4 text-xs text-slate-500">
+                        Display order: {item.display_order}
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => editItem(item)}
+                          className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                        >
+                          Edit
+                        </button>
+
+                        {item.status === "published" ? (
+                          <button
+                            type="button"
+                            onClick={() => updateStatus(item, "draft")}
+                            className="rounded-lg border border-amber-200 px-3 py-2 text-sm font-medium text-amber-700 hover:bg-amber-50"
+                          >
+                            Unpublish
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => updateStatus(item, "published")}
+                            className="rounded-lg border border-emerald-200 px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50"
+                          >
+                            Publish
+                          </button>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => deleteItem(item)}
+                          className="rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
               </div>
             )}
           </section>

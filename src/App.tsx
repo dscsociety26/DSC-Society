@@ -66,11 +66,14 @@ const App = () => {
               <Route path="/admin/team" element={<AdminTeam />} />
               <Route path="/admin/events" element={<AdminEvents />} />
               <Route path="/admin/gallery" element={<AdminGallery />} />
-<Route
-  path="/admin/volunteers"
-  element={<AdminVolunteers />}
-/>
-<Route path="/admin/contacts" element={<AdminContacts />} />
+              <Route
+                path="/admin/volunteers"
+                element={<AdminVolunteers />}
+              />
+              <Route
+                path="/admin/contacts"
+                element={<AdminContacts />}
+              />
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
