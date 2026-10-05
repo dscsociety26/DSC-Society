@@ -7,6 +7,7 @@ import logo from "@/assets/dsc-logo.png";
 const navItems = [
   { label: "Home", path: "/" },
   { label: "About", path: "/about" },
+  { label: "Activities", path: "/activities" },
   { label: "Focus Areas", path: "/focus-areas" },
   { label: "Gallery", path: "/gallery" },
   { label: "Join Us", path: "/join-us" },

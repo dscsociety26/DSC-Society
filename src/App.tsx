@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 
 import Index from "./pages/Index";
 import About from "./pages/About";
+import Activities from "./pages/Activities";
 import TeamProfile from "./pages/TeamProfile";
 import FocusAreas from "./pages/FocusAreas";
 import Gallery from "./pages/Gallery";
@@ -43,6 +44,7 @@ const App = () => {
               {/* Public Website */}
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
+              <Route path="/activities" element={<Activities />} />
               <Route path="/team/:id" element={<TeamProfile />} />
               <Route path="/focus-areas" element={<FocusAreas />} />
               <Route path="/gallery" element={<Gallery />} />

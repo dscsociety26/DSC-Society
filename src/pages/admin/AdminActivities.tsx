@@ -148,7 +148,7 @@ const AdminActivities = () => {
     }
 
     const { data } = supabase.storage
-      .from("dsc-media")
+      .from("dsc-media 5")
       .getPublicUrl(filePath);
 
     setUploading(false);
