@@ -17,7 +17,7 @@ import Gallery from "./pages/Gallery";
 import JoinUs from "./pages/JoinUs";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
-import Activities from "./pages/Activities";
+
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminActivities from "./pages/admin/AdminActivities";
@@ -48,7 +48,6 @@ const App = () => {
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/join-us" element={<JoinUs />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/activities" element={<Activities />} />
 
               {/* Admin Panel */}
               <Route path="/admin" element={<AdminLogin />} />
