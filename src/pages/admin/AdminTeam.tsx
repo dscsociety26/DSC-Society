@@ -5,8 +5,12 @@ import { supabase } from "../../lib/supabase";
 type TeamMember = {
   id: string;
   name: string;
+  slug: string;
   designation: string;
+  short_bio: string | null;
   bio: string | null;
+  origin: string | null;
+  interests: string[] | null;
   image_url: string | null;
   display_order: number;
   status: "draft" | "published";
@@ -15,8 +19,12 @@ type TeamMember = {
 
 type FormData = {
   name: string;
+  slug: string;
   designation: string;
+  short_bio: string;
   bio: string;
+  origin: string;
+  interests: string;
   image_url: string;
   display_order: number;
   status: "draft" | "published";
@@ -24,8 +32,12 @@ type FormData = {
 
 const initialForm: FormData = {
   name: "",
+  slug: "",
   designation: "",
+  short_bio: "",
   bio: "",
+  origin: "",
+  interests: "",
   image_url: "",
   display_order: 0,
   status: "draft",
@@ -111,8 +123,12 @@ export default function AdminTeam() {
 
     setForm({
       name: member.name,
+      slug: member.slug,
       designation: member.designation,
+      short_bio: member.short_bio ?? "",
       bio: member.bio ?? "",
+      origin: member.origin ?? "",
+      interests: member.interests?.join(", ") ?? "",
       image_url: member.image_url ?? "",
       display_order: member.display_order ?? 0,
       status: member.status,
@@ -167,10 +183,34 @@ export default function AdminTeam() {
     try {
       const imageUrl = await uploadImage();
 
+      const generatedSlug = form.name
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+      const slug = (form.slug.trim() || generatedSlug)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+      if (!slug) {
+        throw new Error("A valid profile slug is required.");
+      }
+
+      const interests = form.interests
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+
       const payload = {
         name: form.name.trim(),
+        slug,
         designation: form.designation.trim(),
+        short_bio: form.short_bio.trim() || null,
         bio: form.bio.trim() || null,
+        origin: form.origin.trim() || null,
+        interests,
         image_url: imageUrl,
         display_order: Number(form.display_order) || 0,
         status: form.status,
@@ -319,6 +359,69 @@ export default function AdminTeam() {
 
               <div>
                 <label className="mb-1 block text-sm font-medium text-slate-700">
+                  Profile Slug
+                </label>
+                <input
+                  value={form.slug}
+                  onChange={(e) =>
+                    setForm({ ...form, slug: e.target.value })
+                  }
+                  placeholder="e.g. sai-charan-gupta"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                />
+                <p className="mt-1 text-xs text-slate-500">
+                  Used in the team profile URL.
+                </p>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">
+                  Short Bio
+                </label>
+                <textarea
+                  rows={3}
+                  value={form.short_bio}
+                  onChange={(e) =>
+                    setForm({ ...form, short_bio: e.target.value })
+                  }
+                  placeholder="Short introduction shown on the team card..."
+                  className="w-full resize-y rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">
+                  Origin
+                </label>
+                <input
+                  value={form.origin}
+                  onChange={(e) =>
+                    setForm({ ...form, origin: e.target.value })
+                  }
+                  placeholder="e.g. Guntur, Andhra Pradesh"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">
+                  Interests
+                </label>
+                <input
+                  value={form.interests}
+                  onChange={(e) =>
+                    setForm({ ...form, interests: e.target.value })
+                  }
+                  placeholder="Environment, Social Service, Education"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                />
+                <p className="mt-1 text-xs text-slate-500">
+                  Separate multiple interests with commas.
+                </p>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">
                   Biography
                 </label>
                 <textarea
@@ -327,7 +430,7 @@ export default function AdminTeam() {
                   onChange={(e) =>
                     setForm({ ...form, bio: e.target.value })
                   }
-                  placeholder="Write a short introduction..."
+                  placeholder="Write the full biography..."
                   className="w-full resize-y rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                 />
               </div>

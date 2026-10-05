@@ -1,5 +1,6 @@
 
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import {
   Globe,
@@ -11,7 +12,7 @@ import {
 } from "lucide-react";
 
 import SectionFadeIn from "@/components/SectionFadeIn";
-import { team } from "@/data/team";
+import { supabase } from "@/lib/supabase";
 
 import hero1 from "@/assets/hero-1.jpg";
 import hero4 from "@/assets/hero-4.jpg";
@@ -58,7 +59,49 @@ const milestones = [
 
 // About Page
 
+type TeamMember = {
+  id: string;
+  name: string;
+  slug: string;
+  designation: string;
+  short_bio: string | null;
+  image_url: string | null;
+  display_order: number;
+  status: "draft" | "published";
+};
+
 const About = () => {
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [teamLoading, setTeamLoading] = useState(true);
+  const [teamError, setTeamError] = useState("");
+
+  useEffect(() => {
+    const loadTeam = async () => {
+      setTeamLoading(true);
+      setTeamError("");
+
+      const { data, error } = await supabase
+        .from("team_members")
+        .select(
+          "id, name, slug, designation, short_bio, image_url, display_order, status"
+        )
+        .eq("status", "published")
+        .order("display_order", { ascending: true });
+
+      if (error) {
+        console.error("Failed to load team:", error);
+        setTeamError("Unable to load our team at the moment.");
+        setTeamMembers([]);
+      } else {
+        setTeamMembers(data ?? []);
+      }
+
+      setTeamLoading(false);
+    };
+
+    loadTeam();
+  }, []);
+
   return (
     <div className="pt-20">
 
@@ -355,77 +398,99 @@ const About = () => {
 
             {/* Team Cards */}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {teamLoading ? (
 
-              {team.map((member) => (
+              <div className="text-center py-12 text-muted-foreground">
+                Loading our team...
+              </div>
 
-                <Link
-                  key={member.id}
-                  to={`/team/${member.id}`}
-                  aria-label={`View full profile of ${member.name}`}
-                  className="glass-card p-6 text-center hover-lift group block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                >
+            ) : teamError ? (
 
-                  {/* Profile Photograph */}
+              <div className="text-center py-12 text-muted-foreground">
+                {teamError}
+              </div>
 
-                  <div className="w-28 h-28 rounded-full overflow-hidden mx-auto mb-5 gradient-green flex items-center justify-center text-primary-foreground font-heading font-bold text-3xl shadow-md">
+            ) : teamMembers.length === 0 ? (
 
-                    {member.photo ? (
+              <div className="text-center py-12 text-muted-foreground">
+                Our team information is currently unavailable.
+              </div>
 
-                      <img
-                        src={member.photo}
-                        alt={member.name}
-                        loading="lazy"
-                        className="w-full h-full object-cover"
-                      />
+            ) : (
 
-                    ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                      member.name.charAt(0)
+                {teamMembers.map((member) => (
 
-                    )}
+                  <Link
+                    key={member.id}
+                    to={`/team/${member.slug}`}
+                    aria-label={`View full profile of ${member.name}`}
+                    className="glass-card p-6 text-center hover-lift group block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
 
-                  </div>
+                    {/* Profile Photograph */}
 
-                  {/* Member Name */}
+                    <div className="w-28 h-28 rounded-full overflow-hidden mx-auto mb-5 gradient-green flex items-center justify-center text-primary-foreground font-heading font-bold text-3xl shadow-md">
 
-                  <h3 className="font-heading text-lg font-semibold text-foreground">
-                    {member.name}
-                  </h3>
+                      {member.image_url ? (
 
-                  {/* Designation */}
+                        <img
+                          src={member.image_url}
+                          alt={member.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                        />
 
-                  <p className="text-sm text-primary font-medium mt-2">
-                    {member.role}
-                  </p>
+                      ) : (
 
-                  {/* Short Biography */}
+                        member.name.charAt(0)
 
-                  <p className="text-sm text-muted-foreground mt-4 leading-relaxed">
-                    {member.shortBio}
-                  </p>
+                      )}
 
-                  {/* Profile Link */}
+                    </div>
 
-                  <div className="mt-5 pt-4 border-t border-border/50">
+                    {/* Member Name */}
 
-                    <span className="inline-flex items-center gap-2 text-sm font-semibold text-primary group-hover:underline">
+                    <h3 className="font-heading text-lg font-semibold text-foreground">
+                      {member.name}
+                    </h3>
 
-                      View Full Profile
+                    {/* Designation */}
 
-                      <span aria-hidden="true">
-                        →
+                    <p className="text-sm text-primary font-medium mt-2">
+                      {member.designation}
+                    </p>
+
+                    {/* Short Biography */}
+
+                    <p className="text-sm text-muted-foreground mt-4 leading-relaxed">
+                      {member.short_bio}
+                    </p>
+
+                    {/* Profile Link */}
+
+                    <div className="mt-5 pt-4 border-t border-border/50">
+
+                      <span className="inline-flex items-center gap-2 text-sm font-semibold text-primary group-hover:underline">
+
+                        View Full Profile
+
+                        <span aria-hidden="true">
+                          →
+                        </span>
+
                       </span>
 
-                    </span>
+                    </div>
 
-                  </div>
+                  </Link>
 
-                </Link>
+                ))}
 
-              ))}
+              </div>
 
-            </div>
+            )}
 
           </div>
 

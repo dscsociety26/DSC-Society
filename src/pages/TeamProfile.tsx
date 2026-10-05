@@ -1,18 +1,73 @@
 import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Leaf,
   MapPin,
 } from "lucide-react";
 
-import { team } from "@/data/team";
+import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import SectionFadeIn from "@/components/SectionFadeIn";
+
+type TeamMember = {
+  id: string;
+  name: string;
+  slug: string;
+  designation: string;
+  short_bio: string | null;
+  bio: string | null;
+  origin: string | null;
+  interests: string[] | null;
+  image_url: string | null;
+  status: "draft" | "published";
+};
 
 const TeamProfile = () => {
   const { id } = useParams<{ id: string }>();
 
-  const member = team.find((person) => person.id === id);
+  const [member, setMember] = useState<TeamMember | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadMember = async () => {
+      setLoading(true);
+
+      const { data, error } = await supabase
+        .from("team_members")
+        .select(
+          "id, name, slug, designation, short_bio, bio, origin, interests, image_url, status"
+        )
+        .eq("slug", id)
+        .eq("status", "published")
+        .maybeSingle();
+
+      if (error) {
+        console.error("Failed to load team member:", error);
+        setMember(null);
+      } else {
+        setMember(data);
+      }
+
+      setLoading(false);
+    };
+
+    if (id) {
+      loadMember();
+    } else {
+      setLoading(false);
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center px-4">
+        <p className="text-muted-foreground">
+          Loading team member...
+        </p>
+      </div>
+    );
+  }
 
   if (!member) {
     return (
@@ -53,9 +108,9 @@ const TeamProfile = () => {
 
             {/* Member Photograph */}
             <div className="rounded-2xl overflow-hidden aspect-[3/4] bg-muted shadow-lg">
-              {member.photo ? (
+              {member.image_url ? (
                 <img
-                  src={member.photo}
+                  src={member.image_url}
                   alt={member.name}
                   className="w-full h-full object-cover"
                 />
@@ -77,12 +132,14 @@ const TeamProfile = () => {
               </h1>
 
               <p className="text-primary font-semibold text-lg mt-3">
-                {member.role}
+                {member.designation}
               </p>
 
-              <p className="text-muted-foreground leading-relaxed mt-6">
-                {member.shortBio}
-              </p>
+              {member.short_bio && (
+                <p className="text-muted-foreground leading-relaxed mt-6">
+                  {member.short_bio}
+                </p>
+              )}
 
               {member.origin && (
                 <div className="flex items-start gap-3 mt-6">
@@ -120,28 +177,30 @@ const TeamProfile = () => {
               </h2>
 
               <p className="text-muted-foreground leading-8 text-base md:text-lg whitespace-pre-line">
-                {member.biography}
+                {member.bio}
               </p>
             </div>
 
             {/* Areas of Interest */}
-            <div className="glass-card p-6 md:p-8">
-              <h3 className="font-heading text-2xl font-bold mb-6">
-                Areas of Interest
-              </h3>
+            {member.interests && member.interests.length > 0 && (
+              <div className="glass-card p-6 md:p-8">
+                <h3 className="font-heading text-2xl font-bold mb-6">
+                  Areas of Interest
+                </h3>
 
-              <div className="flex flex-wrap gap-3">
-                {member.interests.map((interest) => (
-                  <span
-                    key={interest}
-                    className="inline-flex items-center gap-2 rounded-full bg-muted px-4 py-3 text-sm"
-                  >
-                    <Leaf size={16} className="text-primary" />
-                    {interest}
-                  </span>
-                ))}
+                <div className="flex flex-wrap gap-3">
+                  {member.interests.map((interest) => (
+                    <span
+                      key={interest}
+                      className="inline-flex items-center gap-2 rounded-full bg-muted px-4 py-3 text-sm"
+                    >
+                      <Leaf size={16} className="text-primary" />
+                      {interest}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Return Button */}
             <div className="text-center mt-12">
