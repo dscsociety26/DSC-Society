@@ -90,7 +90,8 @@ const AppLayout = () => {
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
+      <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -101,7 +102,8 @@ const App = () => {
 
         <SpeedInsights />
       </TooltipProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </>
   );
 };
 
