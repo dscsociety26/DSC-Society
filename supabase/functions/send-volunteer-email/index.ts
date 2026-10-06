@@ -2,6 +2,12 @@ const RESEND_API_URL = "https://api.resend.com/emails";
 const FROM_EMAIL = "DSC Society <volunteer@dscsociety.org>";
 const ADMIN_EMAIL = "dscsociety.org@gmail.com";
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
 type Application = {
   full_name: string;
   email: string;
@@ -20,10 +26,18 @@ const jsonResponse = (
     status,
     headers: {
       "Content-Type": "application/json",
+      ...CORS_HEADERS,
     },
   });
 
 Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", {
+      status: 200,
+      headers: CORS_HEADERS,
+    });
+  }
+
   if (req.method !== "POST") {
     return jsonResponse(
       { error: "Method not allowed" },
