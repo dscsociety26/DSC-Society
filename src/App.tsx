@@ -1,9 +1,13 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import Navbar from "@/components/Navbar";
@@ -28,7 +32,59 @@ import AdminEvents from "./pages/admin/AdminEvents";
 import AdminGallery from "./pages/admin/AdminGallery";
 import AdminVolunteers from "./pages/admin/AdminVolunteers";
 import AdminContacts from "./pages/admin/AdminContacts";
+import AdminProtectedRoute from "./components/admin/AdminProtectedRoute";
+import AdminLayout from "./components/admin/AdminLayout";
+
 const queryClient = new QueryClient();
+
+const AppLayout = () => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
+  return (
+    <>
+      {!isAdminRoute && <Navbar />}
+
+      <main className={isAdminRoute ? "min-h-screen" : ""}>
+        <Routes>
+          {/* Public Website */}
+          <Route path="/" element={<Index />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/activities" element={<Activities />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/team/:id" element={<TeamProfile />} />
+          <Route path="/focus-areas" element={<FocusAreas />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/join-us" element={<JoinUs />} />
+          <Route path="/contact" element={<Contact />} />
+
+          {/* Admin Login */}
+          <Route path="/admin" element={<AdminLogin />} />
+
+
+{/* Protected Admin Panel */}
+<Route element={<AdminProtectedRoute />}>
+  <Route element={<AdminLayout />}>
+    <Route path="/admin/dashboard" element={<AdminDashboard />} />
+    <Route path="/admin/activities" element={<AdminActivities />} />
+    <Route path="/admin/team" element={<AdminTeam />} />
+    <Route path="/admin/events" element={<AdminEvents />} />
+    <Route path="/admin/gallery" element={<AdminGallery />} />
+    <Route path="/admin/volunteers" element={<AdminVolunteers />} />
+    <Route path="/admin/contacts" element={<AdminContacts />} />
+  </Route>
+</Route>
+
+
+          {/* 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+
+      {!isAdminRoute && <Footer />}
+    </>
+  );
+};
 
 const App = () => {
   return (
@@ -38,48 +94,7 @@ const App = () => {
         <Sonner />
 
         <BrowserRouter>
-          <Navbar />
-
-          <main>
-            <Routes>
-              {/* Public Website */}
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/activities" element={<Activities />} />
-              <Route path="/events" element={<Events />} />
-              <Route path="/team/:id" element={<TeamProfile />} />
-              <Route path="/focus-areas" element={<FocusAreas />} />
-              <Route path="/gallery" element={<Gallery />} />
-              <Route path="/join-us" element={<JoinUs />} />
-              <Route path="/contact" element={<Contact />} />
-
-              {/* Admin Panel */}
-              <Route path="/admin" element={<AdminLogin />} />
-              <Route
-                path="/admin/dashboard"
-                element={<AdminDashboard />}
-              />
-              <Route
-                path="/admin/activities"
-                element={<AdminActivities />}
-              />
-              <Route path="/admin/team" element={<AdminTeam />} />
-              <Route path="/admin/events" element={<AdminEvents />} />
-              <Route path="/admin/gallery" element={<AdminGallery />} />
-              <Route
-                path="/admin/volunteers"
-                element={<AdminVolunteers />}
-              />
-              <Route
-                path="/admin/contacts"
-                element={<AdminContacts />}
-              />
-              {/* 404 */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-
-          <Footer />
+          <AppLayout />
         </BrowserRouter>
 
         <SpeedInsights />

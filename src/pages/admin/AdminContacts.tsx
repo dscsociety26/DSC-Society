@@ -158,32 +158,27 @@ export default function AdminContacts() {
     <div className="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
-        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <a
-              href="/admin/dashboard"
-              className="mb-3 inline-flex text-sm font-medium text-slate-500 hover:text-emerald-700"
-            >
-              ← Back to Dashboard
-            </a>
+        <div className="mb-8 space-y-5">
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                Contact Submissions
+              </h1>
 
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-              Contact Submissions
-            </h1>
+              <p className="mt-1 text-sm text-slate-500">
+                Review and manage messages received through the DSC Society
+                website.
+              </p>
+            </div>
 
-            <p className="mt-1 text-sm text-slate-500">
-              Review and manage messages received through the DSC Society
-              website.
-            </p>
-          </div>
-
-          <button
+            <button
             onClick={() => void fetchContacts()}
             disabled={loading}
             className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-100 disabled:opacity-50"
           >
             {loading ? "Refreshing..." : "↻ Refresh"}
-          </button>
+            </button>
+          </div>
         </div>
 
         {/* Error */}

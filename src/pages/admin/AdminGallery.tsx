@@ -513,18 +513,20 @@ export default function AdminGallery() {
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-8">
-          <p className="text-sm font-semibold uppercase tracking-wider text-emerald-700">
-            DSC Society Admin
-          </p>
+        <div className="mb-8 space-y-5">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-wider text-emerald-700">
+              DSC Society Admin
+            </p>
 
           <h1 className="mt-2 text-3xl font-bold text-slate-900">
             Gallery Management
           </h1>
 
-          <p className="mt-2 text-slate-600">
-            Upload and organize photographs by category and event.
-          </p>
+            <p className="mt-2 text-slate-600">
+              Upload and organize photographs by category and event.
+            </p>
+          </div>
         </div>
 
         {(error || success) && (

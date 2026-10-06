@@ -18,12 +18,10 @@ import {
   Archive,
   Eye,
   Loader2,
-  ArrowLeft,
   Upload,
   Image as ImageIcon,
   X,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 
 type Activity = {
   id: string;
@@ -290,27 +288,21 @@ const AdminActivities = () => {
   return (
     <div className="min-h-screen bg-background px-4 py-8 md:px-8">
       <div className="mx-auto max-w-6xl space-y-8">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <Link
-              to="/admin/dashboard"
-              className="mb-3 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-            >
-              <ArrowLeft size={16} />
-              Back to Dashboard
-            </Link>
+        <div className="space-y-5">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">
+                Activities Management
+              </h1>
 
-            <h1 className="text-3xl font-bold tracking-tight">
-              Activities Management
-            </h1>
+              <p className="mt-2 text-muted-foreground">
+                Create and manage DSC Society activities.
+              </p>
+            </div>
 
-            <p className="mt-2 text-muted-foreground">
-              Create and manage DSC Society activities.
-            </p>
-          </div>
-
-          <div className="rounded-lg border px-4 py-3 text-sm">
-            Total Activities: <strong>{activities.length}</strong>
+            <div className="rounded-lg border bg-white px-4 py-3 text-sm shadow-sm">
+              Total Activities: <strong>{activities.length}</strong>
+            </div>
           </div>
         </div>
 

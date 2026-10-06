@@ -1,7 +1,8 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LockKeyhole, Leaf, Loader2 } from "lucide-react";
+import { LockKeyhole, Loader2 } from "lucide-react";
+import dscLogo from "@/assets/dsc-logo.png";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,8 +68,12 @@ const AdminLogin = () => {
     <main className="min-h-[75vh] flex items-center justify-center bg-muted/30 px-4 py-12">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="text-center space-y-3">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <Leaf className="h-7 w-7" />
+          <div className="mx-auto flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-sm ring-1 ring-slate-200">
+            <img
+              src={dscLogo}
+              alt="DSC Society Logo"
+              className="h-full w-full object-contain"
+            />
           </div>
 
           <CardTitle className="text-2xl font-bold">
