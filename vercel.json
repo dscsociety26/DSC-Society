@@ -22,6 +22,10 @@
         {
           "key": "Permissions-Policy",
           "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "X-DSC-Security-Test",
+          "value": "enabled"
         }
       ]
     }
