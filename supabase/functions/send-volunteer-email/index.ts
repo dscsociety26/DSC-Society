@@ -4,18 +4,19 @@ const ADMIN_EMAIL = "dscsociety.org@gmail.com";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 type Application = {
-  full_name: string;
-  email: string;
-  phone: string;
-  college?: string | null;
-  interests?: string | null;
-  message?: string | null;
-  application_type?: string | null;
+  full_name: unknown;
+  email: unknown;
+  phone: unknown;
+  college?: unknown;
+  interests?: unknown;
+  message?: unknown;
+  application_type?: unknown;
 };
 
 const jsonResponse = (
@@ -29,6 +30,28 @@ const jsonResponse = (
       ...CORS_HEADERS,
     },
   });
+
+const cleanText = (
+  value: unknown,
+  maxLength: number
+): string => {
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  return value.trim().slice(0, maxLength);
+};
+
+const escapeHtml = (value: string): string =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+
+const isValidEmail = (email: string): boolean =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -48,9 +71,37 @@ Deno.serve(async (req) => {
   try {
     const application = (await req.json()) as Application;
 
-    if (!application.full_name || !application.email) {
+    const fullName = cleanText(application.full_name, 100);
+    const email = cleanText(application.email, 254).toLowerCase();
+    const phone = cleanText(application.phone, 20);
+    const college = cleanText(application.college, 200);
+    const interests = cleanText(application.interests, 500);
+    const message = cleanText(application.message, 5000);
+    const applicationType = cleanText(
+      application.application_type,
+      20
+    );
+
+    if (!fullName || !email) {
       return jsonResponse(
         { error: "Name and email are required." },
+        400
+      );
+    }
+
+    if (!isValidEmail(email)) {
+      return jsonResponse(
+        { error: "Please provide a valid email address." },
+        400
+      );
+    }
+
+    if (
+      applicationType !== "Volunteer" &&
+      applicationType !== "Internship"
+    ) {
+      return jsonResponse(
+        { error: "Invalid application type." },
         400
       );
     }
@@ -66,19 +117,28 @@ Deno.serve(async (req) => {
       );
     }
 
-    const applicationType =
-      application.application_type || "Volunteer";
+    const safeApplicationType = escapeHtml(applicationType);
+    const safeFullName = escapeHtml(fullName);
+    const safeEmail = escapeHtml(email);
+    const safePhone = escapeHtml(phone || "Not provided");
+    const safeCollege = escapeHtml(college || "Not provided");
+    const safeInterests = escapeHtml(
+      interests || "Not provided"
+    );
+    const safeMessage = escapeHtml(
+      message || "Not provided"
+    );
 
     const adminEmailHtml = `
       <h2>New DSC Society Application</h2>
 
-      <p><strong>Application Type:</strong> ${applicationType}</p>
-      <p><strong>Name:</strong> ${application.full_name}</p>
-      <p><strong>Email:</strong> ${application.email}</p>
-      <p><strong>Phone:</strong> ${application.phone || "Not provided"}</p>
-      <p><strong>College:</strong> ${application.college || "Not provided"}</p>
-      <p><strong>Interests:</strong> ${application.interests || "Not provided"}</p>
-      <p><strong>Message:</strong> ${application.message || "Not provided"}</p>
+      <p><strong>Application Type:</strong> ${safeApplicationType}</p>
+      <p><strong>Name:</strong> ${safeFullName}</p>
+      <p><strong>Email:</strong> ${safeEmail}</p>
+      <p><strong>Phone:</strong> ${safePhone}</p>
+      <p><strong>College:</strong> ${safeCollege}</p>
+      <p><strong>Interests:</strong> ${safeInterests}</p>
+      <p><strong>Message:</strong> ${safeMessage}</p>
 
       <hr />
 
@@ -94,8 +154,8 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: FROM_EMAIL,
         to: [ADMIN_EMAIL],
-        reply_to: application.email,
-        subject: `New ${applicationType} Application - ${application.full_name}`,
+        reply_to: email,
+        subject: `New ${applicationType} Application - ${fullName}`,
         html: adminEmailHtml,
       }),
     });
@@ -115,11 +175,13 @@ Deno.serve(async (req) => {
     const applicantEmailHtml = `
       <h2>Thank you for contacting DSC Society</h2>
 
-      <p>Dear ${application.full_name},</p>
+      <p>Dear ${safeFullName},</p>
 
       <p>
         Thank you for your interest in joining DSC Society.
-        We have successfully received your ${applicationType.toLowerCase()} application.
+        We have successfully received your ${escapeHtml(
+          applicationType.toLowerCase()
+        )} application.
       </p>
 
       <p>
@@ -141,7 +203,7 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         from: FROM_EMAIL,
-        to: [application.email],
+        to: [email],
         subject: "DSC Society - Application Received",
         html: applicantEmailHtml,
       }),
