@@ -35,7 +35,6 @@ import AdminContacts from "./pages/admin/AdminContacts";
 import AdminProtectedRoute from "./components/admin/AdminProtectedRoute";
 import AdminLayout from "./components/admin/AdminLayout";
 import SEO from "./components/SEO";
-import StructuredData from "./components/StructuredData";
 
 const queryClient = new QueryClient();
 
@@ -46,7 +45,6 @@ const AppLayout = () => {
   return (
     <>
       <SEO />
-      <StructuredData />
       {!isAdminRoute && <Navbar />}
 
       <main className={isAdminRoute ? "min-h-screen" : ""}>
