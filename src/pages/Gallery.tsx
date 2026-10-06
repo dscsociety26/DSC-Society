@@ -85,15 +85,21 @@ export default function Gallery() {
       ? images
       : images.filter((image) => image.category === filter);
 
+  const heroImage = images[0]?.image_url;
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
       <section className="relative flex min-h-[55vh] items-center justify-center overflow-hidden">
-        <img
-          src="https://fgeyireivkkchwudqxpp.supabase.co/storage/v1/object/public/dsc-media%205/gallery/legacy/cloth1.jpeg"
-          alt="DSC Society Gallery"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+        {heroImage ? (
+          <img
+            src={heroImage}
+            alt="DSC Society Gallery"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-slate-900" />
+        )}
 
         <div className="absolute inset-0 bg-black/55" />
 

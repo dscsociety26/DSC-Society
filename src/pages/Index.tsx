@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 
 import {
   Shield,
@@ -13,13 +15,6 @@ import {
 import HeroSlider from "@/components/HeroSlider";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import SectionFadeIn from "@/components/SectionFadeIn";
-
-import clean12 from "@/assets/clean12.jpeg";
-import plant1 from "@/assets/plant1.jpeg";
-import plant8 from "@/assets/plant8.jpeg";
-import cloth1 from "@/assets/cloth1.jpeg";
-import cloth2 from "@/assets/cloth2.jpeg";
-import cloth3 from "@/assets/cloth3.jpeg";
 
 // Focus Areas
 const focusAreas = [
@@ -53,39 +48,12 @@ const stats = [
   { end: 800, suffix: "+", label: "Volunteers" },
 ];
 
-// Gallery Images
-const galleryImages = [
-  {
-    id: "cleanliness",
-    src: clean12,
-    alt: "DSC Society community cleanliness initiative",
-  },
-  {
-    id: "plantation-one",
-    src: plant1,
-    alt: "Tree plantation and environmental conservation activity",
-  },
-  {
-    id: "plantation-two",
-    src: plant8,
-    alt: "Students participating in a plantation activity",
-  },
-  {
-    id: "cloth-sharing-one",
-    src: cloth1,
-    alt: "DSC Society cloth sharing initiative",
-  },
-  {
-    id: "cloth-sharing-two",
-    src: cloth2,
-    alt: "Community participation in cloth sharing",
-  },
-  {
-    id: "cloth-sharing-three",
-    src: cloth3,
-    alt: "Cloth sharing wall community service",
-  },
-];
+type GalleryPreviewItem = {
+  id: string;
+  title: string;
+  image_url: string;
+  caption: string | null;
+};
 
 // Join Us Cards
 const joinCards = [
@@ -102,6 +70,32 @@ const joinCards = [
 ];
 
 const Index = () => {
+  const [galleryImages, setGalleryImages] = useState<GalleryPreviewItem[]>([]);
+  const [galleryLoading, setGalleryLoading] = useState(true);
+
+  useEffect(() => {
+    const loadGalleryPreview = async () => {
+      const { data, error } = await supabase
+        .from("gallery")
+        .select("id, title, image_url, caption")
+        .eq("status", "published")
+        .order("display_order", { ascending: true })
+        .order("created_at", { ascending: false })
+        .limit(6);
+
+      if (error) {
+        console.error("Failed to load homepage gallery:", error);
+        setGalleryImages([]);
+      } else {
+        setGalleryImages((data ?? []) as GalleryPreviewItem[]);
+      }
+
+      setGalleryLoading(false);
+    };
+
+    void loadGalleryPreview();
+  }, []);
+
   return (
     <main className="w-full overflow-hidden">
       {/* Hero Section */}
@@ -234,22 +228,36 @@ const Index = () => {
               </span>
             </h2>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-              {galleryImages.map((image) => (
-                <div
-                  key={image.id}
-                  className="aspect-[4/3] overflow-hidden rounded-xl hover-lift bg-muted"
-                >
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                  />
-                </div>
-              ))}
-            </div>
+            {galleryLoading ? (
+              <div className="py-12 text-center text-muted-foreground">
+                Loading gallery...
+              </div>
+            ) : galleryImages.length === 0 ? (
+              <div className="py-12 text-center text-muted-foreground">
+                Gallery images will appear here soon.
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                {galleryImages.map((image) => (
+                  <div
+                    key={image.id}
+                    className="aspect-[4/3] overflow-hidden rounded-xl hover-lift bg-muted"
+                  >
+                    <img
+                      src={image.image_url}
+                      alt={
+                        image.caption ||
+                        image.title ||
+                        "DSC Society Gallery"
+                      }
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="text-center mt-8">
               <Button
