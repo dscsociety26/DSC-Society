@@ -116,8 +116,18 @@ const JoinUs = () => {
           databaseError
         );
 
+        const errorMessage =
+          databaseError.message?.toLowerCase() ?? "";
+
+        const isRateLimited =
+          databaseError.code === "P0001" ||
+          errorMessage.includes("wait a minute") ||
+          errorMessage.includes("rate limit");
+
         throw new Error(
-          "Your application could not be saved. Please try again."
+          isRateLimited
+            ? "Please wait a minute before submitting another application."
+            : "Your application could not be saved. Please try again."
         );
       }
 

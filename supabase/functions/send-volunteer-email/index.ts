@@ -1,3 +1,4 @@
+
 const RESEND_API_URL = "https://api.resend.com/emails";
 const FROM_EMAIL = "DSC Society <volunteer@dscsociety.org>";
 const ADMIN_EMAIL = "dscsociety.org@gmail.com";
@@ -53,6 +54,15 @@ const escapeHtml = (value: string): string =>
 const isValidEmail = (email: string): boolean =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+const hashValue = async (value: string): Promise<string> => {
+  const data = new TextEncoder().encode(value);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+};
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", {
@@ -103,6 +113,67 @@ Deno.serve(async (req) => {
       return jsonResponse(
         { error: "Invalid application type." },
         400
+      );
+    }
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseServiceRoleKey = Deno.env.get(
+      "SUPABASE_SERVICE_ROLE_KEY"
+    );
+
+    if (!supabaseUrl || !supabaseServiceRoleKey) {
+      console.error("Supabase function environment is not configured.");
+
+      return jsonResponse(
+        { error: "Server configuration error." },
+        500
+      );
+    }
+
+    const rateLimitKey = await hashValue(
+      `volunteer-email:${email}`
+    );
+
+    const rateLimitResponse = await fetch(
+      `${supabaseUrl}/rest/v1/rpc/check_volunteer_rate_limit`,
+      {
+        method: "POST",
+        headers: {
+          apikey: supabaseServiceRoleKey,
+          Authorization: `Bearer ${supabaseServiceRoleKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          p_key_hash: rateLimitKey,
+          p_cooldown_seconds: 60,
+        }),
+      }
+    );
+
+    if (!rateLimitResponse.ok) {
+      const rateLimitError = await rateLimitResponse.text();
+
+      console.error(
+        "Rate-limit check failed:",
+        rateLimitResponse.status,
+        rateLimitError
+      );
+
+      return jsonResponse(
+        { error: "Unable to process your request right now." },
+        503
+      );
+    }
+
+    const allowed = await rateLimitResponse.json();
+
+    if (allowed !== true) {
+      return jsonResponse(
+        {
+          error:
+            "Please wait a minute before submitting another application.",
+        },
+        429
       );
     }
 
@@ -210,9 +281,12 @@ Deno.serve(async (req) => {
     });
 
     if (!applicantResponse.ok) {
+      const applicantError = await applicantResponse.text();
+
       console.error(
         "Applicant email failed:",
-        applicantResponse.status
+        applicantResponse.status,
+        applicantError
       );
 
       return jsonResponse(
