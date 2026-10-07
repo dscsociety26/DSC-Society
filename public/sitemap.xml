@@ -56,6 +56,12 @@
   </url>
 
   <url>
+    <loc>https://dscsociety.org/team/tamizharasan-s</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
     <loc>https://dscsociety.org/team/devathi-satyanarayana</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -92,13 +98,13 @@
   </url>
 
   <url>
-    <loc>https://dscsociety.org/team/sai-teja-bandi</loc>
+    <loc>https://dscsociety.org/team/bharadwaj</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://dscsociety.org/team/bharadwaj</loc>
+    <loc>https://dscsociety.org/team/sai-teja-bandi</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

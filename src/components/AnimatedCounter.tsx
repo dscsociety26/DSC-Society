@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
 
 interface Props {
   end: number;
@@ -15,13 +14,31 @@ const AnimatedCounter = ({
   duration = 2,
 }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
-
-  const inView = useInView(ref, {
-    once: true,
-    margin: "-50px",
-  });
-
+  const [inView, setInView] = useState(false);
   const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const element = ref.current;
+
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      {
+        rootMargin: "0px 0px -50px 0px",
+        threshold: 0,
+      }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!inView) return;
@@ -39,9 +56,7 @@ const AnimatedCounter = ({
       const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / totalDuration, 1);
 
-      // Smooth ease-out animation
       const easedProgress = 1 - Math.pow(1 - progress, 3);
-
       const currentValue = Math.floor(easedProgress * end);
 
       setCount(progress === 1 ? end : currentValue);
@@ -53,25 +68,17 @@ const AnimatedCounter = ({
 
     animationFrame = requestAnimationFrame(animate);
 
-    return () => {
-      cancelAnimationFrame(animationFrame);
-    };
+    return () => cancelAnimationFrame(animationFrame);
   }, [inView, end, duration]);
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      initial={{ opacity: 0, y: 16 }}
-      animate={
+      className={`w-full text-center transition-all duration-500 ease-out ${
         inView
-          ? { opacity: 1, y: 0 }
-          : { opacity: 0, y: 16 }
-      }
-      transition={{
-        duration: 0.5,
-        ease: "easeOut",
-      }}
-      className="w-full text-center"
+          ? "translate-y-0 opacity-100"
+          : "translate-y-4 opacity-0"
+      }`}
     >
       <div
         className="font-heading text-4xl md:text-5xl font-bold text-primary-foreground tabular-nums whitespace-nowrap"
@@ -84,7 +91,7 @@ const AnimatedCounter = ({
       <div className="mt-2 text-sm text-primary-foreground/80 font-medium">
         {label}
       </div>
-    </motion.div>
+    </div>
   );
 };
 
