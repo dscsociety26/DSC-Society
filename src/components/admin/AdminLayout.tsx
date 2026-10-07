@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
+  Home,
   Leaf,
   CalendarDays,
   Users,
@@ -20,6 +21,7 @@ import { supabase } from "@/lib/supabase";
 
 const navigation = [
   { label: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
+  { label: "Homepage", path: "/admin/homepage", icon: Home },
   { label: "Activities", path: "/admin/activities", icon: Leaf },
   { label: "Events", path: "/admin/events", icon: CalendarDays },
   { label: "Team Members", path: "/admin/team", icon: Users },

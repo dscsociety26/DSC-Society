@@ -40,13 +40,13 @@ const focusAreas = [
   },
 ];
 
-// Impact Statistics
-const stats = [
-  { end: 3500, suffix: "+", label: "Students Engaged" },
-  { end: 40, suffix: "+", label: "Communities Reached" },
-  { end: 2500, suffix: "+", label: "Beneficiaries" },
-  { end: 800, suffix: "+", label: "Volunteers" },
-];
+type HomepageStatistic = {
+  id: string;
+  value: number;
+  suffix: string;
+  label: string;
+  display_order: number;
+};
 
 type GalleryPreviewItem = {
   id: string;
@@ -70,8 +70,32 @@ const joinCards = [
 ];
 
 const Index = () => {
+  const [statistics, setStatistics] = useState<HomepageStatistic[]>([]);
+  const [statisticsLoading, setStatisticsLoading] = useState(true);
   const [galleryImages, setGalleryImages] = useState<GalleryPreviewItem[]>([]);
   const [galleryLoading, setGalleryLoading] = useState(true);
+
+  useEffect(() => {
+    const loadHomepageStatistics = async () => {
+      const { data, error } = await supabase
+        .from("homepage_statistics")
+        .select("id, value, suffix, label, display_order")
+        .eq("status", "published")
+        .order("display_order", { ascending: true })
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        console.error("Failed to load homepage statistics:", error);
+        setStatistics([]);
+      } else {
+        setStatistics((data ?? []) as HomepageStatistic[]);
+      }
+
+      setStatisticsLoading(false);
+    };
+
+    loadHomepageStatistics();
+  }, []);
 
   useEffect(() => {
     const loadGalleryPreview = async () => {
@@ -199,14 +223,24 @@ const Index = () => {
             </h2>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {stats.map((stat) => (
-                <AnimatedCounter
-                  key={stat.label}
-                  end={stat.end}
-                  suffix={stat.suffix}
-                  label={stat.label}
-                />
-              ))}
+              {statisticsLoading ? (
+                <div className="col-span-full py-8 text-center text-primary-foreground/70">
+                  Loading impact statistics...
+                </div>
+              ) : statistics.length === 0 ? (
+                <div className="col-span-full py-8 text-center text-primary-foreground/70">
+                  Impact statistics will appear here soon.
+                </div>
+              ) : (
+                statistics.map((stat) => (
+                  <AnimatedCounter
+                    key={stat.id}
+                    end={stat.value}
+                    suffix={stat.suffix}
+                    label={stat.label}
+                  />
+                ))
+              )}
             </div>
           </div>
         </section>

@@ -31,6 +31,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminHomepage = lazy(() => import("./pages/admin/AdminHomepage"));
 const AdminActivities = lazy(() => import("./pages/admin/AdminActivities"));
 const AdminTeam = lazy(() => import("./pages/admin/AdminTeam"));
 const AdminEvents = lazy(() => import("./pages/admin/AdminEvents"));
@@ -81,6 +82,10 @@ const AppLayout = () => {
                 <Route
                   path="/admin/dashboard"
                   element={<AdminDashboard />}
+                />
+                <Route
+                  path="/admin/homepage"
+                  element={<AdminHomepage />}
                 />
                 <Route
                   path="/admin/activities"
