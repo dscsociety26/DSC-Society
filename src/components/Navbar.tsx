@@ -64,8 +64,8 @@ const Navbar = () => {
               {item.label}
             </Link>
           ))}
-          <Button className="ml-4 gradient-green border-0 text-primary-foreground font-heading font-semibold">
-            Donate
+          <Button asChild className="ml-4 gradient-green border-0 text-primary-foreground font-heading font-semibold">
+            <Link to="/donate">Donate</Link>
           </Button>
         </div>
 
@@ -95,8 +95,8 @@ const Navbar = () => {
                 {item.label}
               </Link>
             ))}
-            <Button className="mt-2 gradient-green border-0 text-primary-foreground font-heading font-semibold">
-              Donate
+            <Button asChild className="mt-2 gradient-green border-0 text-primary-foreground font-heading font-semibold">
+              <Link to="/donate">Donate</Link>
             </Button>
           </div>
         </div>

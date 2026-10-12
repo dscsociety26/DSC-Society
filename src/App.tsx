@@ -27,6 +27,7 @@ const FocusAreas = lazy(() => import("./pages/FocusAreas"));
 const Gallery = lazy(() => import("./pages/Gallery"));
 const JoinUs = lazy(() => import("./pages/JoinUs"));
 const Contact = lazy(() => import("./pages/Contact"));
+const Donate = lazy(() => import("./pages/Donate"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
@@ -72,6 +73,7 @@ const AppLayout = () => {
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/join-us" element={<JoinUs />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/donate" element={<Donate />} />
 
             {/* Admin Login */}
             <Route path="/admin" element={<AdminLogin />} />

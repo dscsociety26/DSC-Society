@@ -50,6 +50,11 @@ const seoByPath: Record<string, SEOConfig> = {
     description:
       "Contact DSC Society for volunteering, internships, environmental initiatives, partnerships and community programs.",
   },
+  "/donate": {
+    title: "Donate to DSC Society | Support Community Initiatives",
+    description:
+      "Support DSC Society's environmental protection, sustainability, waste reduction and community development initiatives through UPI donations.",
+  },
 };
 
 const defaultSEO: SEOConfig = {

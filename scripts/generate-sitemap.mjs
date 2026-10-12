@@ -19,6 +19,7 @@ const staticPages = [
   { path: "/gallery", changefreq: "weekly", priority: "0.8" },
   { path: "/join-us", changefreq: "monthly", priority: "0.8" },
   { path: "/contact", changefreq: "monthly", priority: "0.7" },
+  { path: "/donate", changefreq: "monthly", priority: "0.7" },
 ];
 
 const response = await fetch(
