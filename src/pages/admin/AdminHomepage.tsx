@@ -569,6 +569,51 @@ export default function AdminHomepage() {
     await loadData();
   }
 
+  async function deleteSlide(slide: HeroSlide) {
+    const slideName = slide.title?.trim() || "this hero slide";
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${slideName}"? This action cannot be undone.`
+    );
+
+    if (!confirmed) return;
+
+    setError("");
+    setSuccess("");
+
+    try {
+      const { data, error: deleteError } = await supabase
+        .from("homepage_slides")
+        .delete()
+        .eq("id", slide.id)
+        .select("id");
+
+      if (deleteError) {
+        setError(deleteError.message);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        setError(
+          "The slide was not deleted. Check your admin permissions and Supabase DELETE policy."
+        );
+        return;
+      }
+
+      if (editingSlideId === slide.id) {
+        resetHeroForm();
+      }
+
+      setSuccess("Hero slide deleted successfully.");
+      await loadData();
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to delete the hero slide."
+      );
+    }
+  }
+
   async function deleteStatistic(statistic: Statistic) {
     const confirmed = window.confirm(
       `Are you sure you want to delete "${statistic.label}"?`
