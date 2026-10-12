@@ -23,6 +23,7 @@ const About = lazy(() => import("./pages/About"));
 const Activities = lazy(() => import("./pages/Activities"));
 const Events = lazy(() => import("./pages/Events"));
 const TeamProfile = lazy(() => import("./pages/TeamProfile"));
+const Team = lazy(() => import("./pages/Team"));
 const FocusAreas = lazy(() => import("./pages/FocusAreas"));
 const Gallery = lazy(() => import("./pages/Gallery"));
 const JoinUs = lazy(() => import("./pages/JoinUs"));
@@ -68,7 +69,7 @@ const AppLayout = () => {
             <Route path="/about" element={<About />} />
             <Route path="/activities" element={<Activities />} />
             <Route path="/events" element={<Events />} />
-            <Route path="/team/:id" element={<TeamProfile />} />
+            <Route path="/team" element={<Team />} />\n            <Route path="/team/:id" element={<TeamProfile />} />
             <Route path="/focus-areas" element={<FocusAreas />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/join-us" element={<JoinUs />} />

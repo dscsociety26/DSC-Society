@@ -420,7 +420,7 @@ const About = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                {teamMembers.map((member) => (
+                {teamMembers.slice(0, 4).map((member) => (
 
                   <Link
                     key={member.id}
@@ -490,6 +490,18 @@ const About = () => {
 
               </div>
 
+            )}
+
+            {!teamLoading && !teamError && teamMembers.length > 5 && (
+              <div className="mt-10 text-center">
+                <Link
+                  to="/team"
+                  className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                >
+                  View All Team Members
+                  <span className="ml-2" aria-hidden="true">→</span>
+                </Link>
+              </div>
             )}
 
           </div>
