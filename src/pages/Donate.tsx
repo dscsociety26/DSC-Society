@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { Heart, ShieldCheck, Smartphone, QrCode } from "lucide-react";
+import { Heart, ShieldCheck, Smartphone, QrCode, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AdvisoryMarquee from "@/components/AdvisoryMarquee";
 
@@ -13,6 +13,7 @@ const suggestedAmounts = [100, 250, 500, 1000];
 const Donate = () => {
   const [amount, setAmount] = useState("500");
   const [customAmount, setCustomAmount] = useState("");
+  const [upiCopied, setUpiCopied] = useState(false);
 
   const selectedAmount = customAmount ? customAmount : amount;
   const numericAmount = Number(selectedAmount);
@@ -132,14 +133,21 @@ const Donate = () => {
 
             {paymentConfigured ? (
               <Button
-                asChild
-                disabled={!paymentUri}
+                type="button"
+                disabled={!upiId}
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(upiId);
+                    setUpiCopied(true);
+                    window.setTimeout(() => setUpiCopied(false), 2500);
+                  } catch {
+                    setUpiCopied(false);
+                  }
+                }}
                 className="mt-6 h-12 w-full gradient-green border-0 font-semibold text-primary-foreground"
               >
-                <a href={paymentUri || undefined}>
-                  <Smartphone className="mr-2 h-4 w-4" />
-                  Pay with UPI
-                </a>
+                <Copy className="mr-2 h-4 w-4" />
+                {upiCopied ? "UPI ID Copied" : "Copy UPI ID"}
               </Button>
             ) : (
               <Button disabled className="mt-6 h-12 w-full">
