@@ -1,19 +1,51 @@
 import { useMemo, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { Heart, ShieldCheck, Smartphone, QrCode, Copy } from "lucide-react";
+import { Heart, ShieldCheck, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AdvisoryMarquee from "@/components/AdvisoryMarquee";
+
+type RazorpayResponse = {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+};
+
+type RazorpayOptions = {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  handler: (response: RazorpayResponse) => void | Promise<void>;
+  modal?: { ondismiss?: () => void };
+};
+
+type RazorpayInstance = {
+  open: () => void;
+  on: (
+    event: string,
+    callback: (response: { error?: { description?: string } }) => void
+  ) => void;
+};
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: RazorpayOptions) => RazorpayInstance;
+  }
+}
 
 const upiId = import.meta.env.VITE_DONATION_UPI_ID?.trim() ?? "";
 const beneficiaryName =
   import.meta.env.VITE_DONATION_BENEFICIARY_NAME?.trim() ?? "";
+
+const paymentConfigured = Boolean(upiId && beneficiaryName);
 
 const suggestedAmounts = [100, 250, 500, 1000];
 
 const Donate = () => {
   const [amount, setAmount] = useState("500");
   const [customAmount, setCustomAmount] = useState("");
-  const [upiCopied, setUpiCopied] = useState(false);
 
   const selectedAmount = customAmount ? customAmount : amount;
   const numericAmount = Number(selectedAmount);
@@ -43,7 +75,113 @@ const Donate = () => {
     return `upi://pay?${params.toString().replace(/\+/g, "%20")}`;
   }, [numericAmount, validAmount]);
 
-  const paymentConfigured = Boolean(upiId && beneficiaryName);
+  const [isPaying, setIsPaying] = useState(false);
+  const [paymentMessage, setPaymentMessage] = useState("");
+
+  const handleDonate = async () => {
+    if (!validAmount || isPaying) return;
+
+    setIsPaying(true);
+    setPaymentMessage("");
+
+    try {
+      const orderResponse = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: numericAmount }),
+      });
+
+      const order = await orderResponse.json();
+
+      if (!orderResponse.ok) {
+        throw new Error(order.error || "Unable to start your donation.");
+      }
+
+      if (!order.orderId || !order.keyId || !order.amount) {
+        throw new Error("The payment service returned an invalid order.");
+      }
+
+      if (!window.Razorpay) {
+        await new Promise<void>((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://checkout.razorpay.com/v1/checkout.js";
+          script.async = true;
+          script.onload = () => resolve();
+          script.onerror = () =>
+            reject(new Error("Could not load Razorpay Checkout."));
+          document.body.appendChild(script);
+        });
+      }
+
+      if (!window.Razorpay) {
+        throw new Error("Razorpay Checkout is unavailable.");
+      }
+
+      const checkout = new window.Razorpay({
+        key: order.keyId,
+        amount: order.amount,
+        currency: order.currency || "INR",
+        name: "DSC Society",
+        description: "Donation to DSC Society",
+        order_id: order.orderId,
+        handler: async (response) => {
+          try {
+            const verificationResponse = await fetch(
+              "/api/verify-payment",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(response),
+              }
+            );
+
+            const verification = await verificationResponse.json();
+
+            if (
+              verificationResponse.ok &&
+              verification.verified &&
+              verification.paid
+            ) {
+              setPaymentMessage(
+                "Thank you! Your donation payment has been verified."
+              );
+            } else {
+              setPaymentMessage(
+                verification.error ||
+                "Payment received a response but is not yet confirmed as captured. Please check your payment status before trying again."
+              );
+            }
+          } catch {
+            setPaymentMessage(
+              "We couldn't confirm the payment status. Please contact DSC Society with your Razorpay payment details before trying again."
+            );
+          } finally {
+            setIsPaying(false);
+          }
+        },
+        modal: {
+          ondismiss: () => setIsPaying(false),
+        },
+      });
+
+      checkout.on("payment.failed", (response) => {
+        setPaymentMessage(
+          response.error?.description ||
+          "Payment failed. Please try again or use the UPI QR code."
+        );
+        setIsPaying(false);
+      });
+
+      checkout.open();
+    } catch (error) {
+      setPaymentMessage(
+        error instanceof Error
+          ? error.message
+          : "Unable to start your donation. Please try again."
+      );
+      setIsPaying(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background pt-20 pb-16">
@@ -131,28 +269,22 @@ const Donate = () => {
               </p>
             </div>
 
-            {paymentConfigured ? (
-              <Button
-                type="button"
-                disabled={!upiId}
-                onClick={async () => {
-                  try {
-                    await navigator.clipboard.writeText(upiId);
-                    setUpiCopied(true);
-                    window.setTimeout(() => setUpiCopied(false), 2500);
-                  } catch {
-                    setUpiCopied(false);
-                  }
-                }}
-                className="mt-6 h-12 w-full gradient-green border-0 font-semibold text-primary-foreground"
+            <Button
+              type="button"
+              className="mt-6 h-12 w-full"
+              disabled={true}
+            >
+              Razorpay donations temporarily unavailable
+            </Button>
+
+            {paymentMessage && (
+              <p
+                role="status"
+                aria-live="polite"
+                className="mt-3 text-sm leading-relaxed"
               >
-                <Copy className="mr-2 h-4 w-4" />
-                {upiCopied ? "UPI ID Copied" : "Copy UPI ID"}
-              </Button>
-            ) : (
-              <Button disabled className="mt-6 h-12 w-full">
-                UPI payment setup pending
-              </Button>
+                {paymentMessage}
+              </p>
             )}
 
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
@@ -195,6 +327,12 @@ const Donate = () => {
                   <p className="mt-1 text-xs text-muted-foreground">
                     Verify the recipient and amount in your app before paying.
                   </p>
+                  <a
+                    href={paymentUri}
+                    className="mt-4 inline-flex min-h-11 items-center justify-center rounded-lg border border-primary px-5 py-2 text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    Open UPI payment app
+                  </a>
                 </>
               ) : (
                 <>
