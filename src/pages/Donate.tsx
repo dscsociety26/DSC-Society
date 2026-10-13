@@ -39,7 +39,7 @@ const Donate = () => {
       tn: "Donation to DSC Society",
     });
 
-    return `upi://pay?${params.toString()}`;
+    return `upi://pay?${params.toString().replace(/\+/g, "%20")}`;
   }, [numericAmount, validAmount]);
 
   const paymentConfigured = Boolean(upiId && beneficiaryName);
