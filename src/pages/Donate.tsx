@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { Heart, ShieldCheck, Smartphone, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import AdvisoryMarquee from "@/components/AdvisoryMarquee";
 
 const upiId = import.meta.env.VITE_DONATION_UPI_ID?.trim() ?? "";
 const beneficiaryName =
@@ -44,7 +45,9 @@ const Donate = () => {
   const paymentConfigured = Boolean(upiId && beneficiaryName);
 
   return (
-    <div className="min-h-screen bg-background pt-24 pb-16">
+    <div className="min-h-screen bg-background pt-20 pb-16">
+      <AdvisoryMarquee />
+
       <section className="container-narrow px-4">
         <div className="mx-auto max-w-3xl text-center">
           <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">

@@ -55,6 +55,11 @@ const seoByPath: Record<string, SEOConfig> = {
     description:
       "Support DSC Society's environmental protection, sustainability, waste reduction and community development initiatives through UPI donations.",
   },
+  "/advisory-committee": {
+    title: "Advisory Committee | DSC Society",
+    description:
+      "Meet the advisory committee guiding DSC Society's environmental protection, sustainability and community development initiatives.",
+  },
 };
 
 const defaultSEO: SEOConfig = {
@@ -120,7 +125,13 @@ const SEO = () => {
             description:
               "Meet the team members contributing to DSC Society's environmental and community development initiatives.",
           }
-        : defaultSEO);
+        : pathname.startsWith("/advisory-committee/")
+          ? {
+              title: "Advisory Committee Member | DSC Society",
+              description:
+                "Learn about an advisory committee member contributing guidance and experience to DSC Society's mission.",
+            }
+          : defaultSEO);
 
     const noindex = isAdminRoute || pathname === "/404";
 

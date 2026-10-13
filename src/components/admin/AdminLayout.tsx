@@ -25,6 +25,7 @@ const navigation = [
   { label: "Activities", path: "/admin/activities", icon: Leaf },
   { label: "Events", path: "/admin/events", icon: CalendarDays },
   { label: "Team Members", path: "/admin/team", icon: Users },
+  { label: "Advisory Committee", path: "/admin/advisory-committee", icon: Users },
   { label: "Gallery", path: "/admin/gallery", icon: Images },
   { label: "Volunteers", path: "/admin/volunteers", icon: ClipboardList },
   { label: "Messages", path: "/admin/contacts", icon: Mail },

@@ -24,6 +24,8 @@ const Activities = lazy(() => import("./pages/Activities"));
 const Events = lazy(() => import("./pages/Events"));
 const TeamProfile = lazy(() => import("./pages/TeamProfile"));
 const Team = lazy(() => import("./pages/Team"));
+const AdvisoryCommittee = lazy(() => import("./pages/AdvisoryCommittee"));
+const AdvisoryMemberProfile = lazy(() => import("./pages/AdvisoryMemberProfile"));
 const FocusAreas = lazy(() => import("./pages/FocusAreas"));
 const Gallery = lazy(() => import("./pages/Gallery"));
 const JoinUs = lazy(() => import("./pages/JoinUs"));
@@ -36,6 +38,7 @@ const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const AdminHomepage = lazy(() => import("./pages/admin/AdminHomepage"));
 const AdminActivities = lazy(() => import("./pages/admin/AdminActivities"));
 const AdminTeam = lazy(() => import("./pages/admin/AdminTeam"));
+const AdminAdvisoryCommittee = lazy(() => import("./pages/admin/AdminAdvisoryCommittee"));
 const AdminEvents = lazy(() => import("./pages/admin/AdminEvents"));
 const AdminGallery = lazy(() => import("./pages/admin/AdminGallery"));
 const AdminVolunteers = lazy(() => import("./pages/admin/AdminVolunteers"));
@@ -69,7 +72,10 @@ const AppLayout = () => {
             <Route path="/about" element={<About />} />
             <Route path="/activities" element={<Activities />} />
             <Route path="/events" element={<Events />} />
-            <Route path="/team" element={<Team />} />\n            <Route path="/team/:id" element={<TeamProfile />} />
+            <Route path="/team" element={<Team />} />
+            <Route path="/advisory-committee" element={<AdvisoryCommittee />} />
+            <Route path="/advisory-committee/:slug" element={<AdvisoryMemberProfile />} />
+            <Route path="/team/:id" element={<TeamProfile />} />
             <Route path="/focus-areas" element={<FocusAreas />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/join-us" element={<JoinUs />} />
@@ -95,6 +101,7 @@ const AppLayout = () => {
                   element={<AdminActivities />}
                 />
                 <Route path="/admin/team" element={<AdminTeam />} />
+                <Route path="/admin/advisory-committee" element={<AdminAdvisoryCommittee />} />
                 <Route path="/admin/events" element={<AdminEvents />} />
                 <Route path="/admin/gallery" element={<AdminGallery />} />
                 <Route

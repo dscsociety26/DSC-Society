@@ -70,10 +70,57 @@ type TeamMember = {
   status: "draft" | "published";
 };
 
+type AdvisoryMember = {
+  id: string;
+  slug: string;
+  bio: string | null;
+  origin: string | null;
+  interests: string[] | null;
+  name: string;
+  designation: string;
+  short_bio: string | null;
+  image_url: string | null;
+  display_order: number;
+};
+
 const About = () => {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [teamLoading, setTeamLoading] = useState(true);
   const [teamError, setTeamError] = useState("");
+  const [advisoryMembers, setAdvisoryMembers] = useState<AdvisoryMember[]>([]);
+  const [advisoryLoading, setAdvisoryLoading] = useState(true);
+  const [advisoryError, setAdvisoryError] = useState("");
+
+
+  useEffect(() => {
+    let active = true;
+
+    const loadAdvisoryMembers = async () => {
+      const { data, error } = await supabase
+        .from("advisory_members")
+        .select("id, name, slug, designation, short_bio, bio, origin, interests, image_url, display_order")
+        .eq("status", "published")
+        .order("display_order", { ascending: true })
+        .order("created_at", { ascending: false });
+
+      if (!active) return;
+
+      if (error) {
+        console.error("Failed to load advisory committee:", error);
+        setAdvisoryError("Unable to load the Advisory Committee at the moment.");
+      } else {
+        setAdvisoryMembers(data ?? []);
+      }
+
+      setAdvisoryLoading(false);
+    };
+
+    void loadAdvisoryMembers();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     const loadTeam = async () => {
@@ -492,7 +539,7 @@ const About = () => {
 
             )}
 
-            {!teamLoading && !teamError && teamMembers.length > 5 && (
+            {!teamLoading && !teamError && teamMembers.length > 4 && (
               <div className="mt-10 text-center">
                 <Link
                   to="/team"
@@ -508,6 +555,99 @@ const About = () => {
 
         </section>
 
+      </SectionFadeIn>
+
+      {/* ADVISORY COMMITTEE */}
+      <SectionFadeIn>
+        <section className="section-padding">
+          <div className="container-narrow">
+            <div className="mb-12 text-center">
+              <span className="text-sm font-semibold uppercase tracking-wider text-primary">
+                Guidance and Experience
+              </span>
+              <h2 className="mt-3 font-heading text-3xl font-bold text-foreground md:text-4xl">
+                Our <span className="text-gradient-green">Advisory Committee</span>
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-muted-foreground">
+                Experienced individuals offering guidance and support to strengthen
+                our mission and community initiatives.
+              </p>
+            </div>
+
+            {advisoryLoading ? (
+              <p className="py-8 text-center text-muted-foreground">
+                Loading Advisory Committee...
+              </p>
+            ) : advisoryError ? (
+              <p className="py-8 text-center text-muted-foreground">
+                {advisoryError}
+              </p>
+            ) : advisoryMembers.length === 0 ? (
+              <p className="py-8 text-center text-muted-foreground">
+                Advisory Committee details will be available soon.
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {advisoryMembers.slice(0, 4).map((member) => (
+                  <Link
+                    key={member.id}
+                    to={`/advisory-committee/${member.slug}`}
+                    className="glass-card block rounded-2xl p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    aria-label={`View profile of ${member.name}`}
+                  >
+                    <div className="mx-auto mb-5 flex h-28 w-28 items-center justify-center overflow-hidden rounded-full bg-primary font-heading text-3xl font-bold text-primary-foreground shadow-md">
+                      {member.image_url ? (
+                        <img
+                          src={member.image_url}
+                          alt={member.name}
+                          loading="lazy"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        member.name.charAt(0)
+                      )}
+                    </div>
+                    <h3 className="font-heading text-lg font-semibold text-foreground">
+                      {member.name}
+                    </h3>
+                    <p className="mt-2 text-sm font-medium text-primary">
+                      {member.designation}
+                    </p>
+                    {member.short_bio && (
+                      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                        {member.short_bio}
+                      </p>
+                    )}
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {!advisoryLoading && !advisoryError && advisoryMembers.length > 4 && (
+              <div className="mt-10 text-center">
+                <Link
+                  to="/advisory-committee"
+                  className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                >
+                  View All Advisory Committee
+                  <span className="ml-2" aria-hidden="true">→</span>
+                </Link>
+              </div>
+            )}
+
+            {!advisoryLoading && !advisoryError && advisoryMembers.length > 0 && advisoryMembers.length <= 4 && (
+              <div className="mt-10 text-center">
+                <Link
+                  to="/advisory-committee"
+                  className="inline-flex items-center justify-center rounded-lg border border-primary px-6 py-3 font-semibold text-primary transition-colors hover:bg-primary/5"
+                >
+                  View Advisory Committee
+                  <span className="ml-2" aria-hidden="true">→</span>
+                </Link>
+              </div>
+            )}
+          </div>
+        </section>
       </SectionFadeIn>
 
     </div>
